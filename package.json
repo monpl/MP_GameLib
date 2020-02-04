@@ -1,0 +1,11 @@
+{
+	"name": "com.monsterplanet.gamelib",
+	"displayName":"MP_GameLib",
+	"version": "1.0.0",
+    "unity": "2019.2",
+    "keywords": ["MonsterPlanet", "GameLib"],
+	"description": "MonsterPlanet's GameLib",
+    "dependencies": {
+      "com.monsterplanet.patterns": "https://github.com/monpl/MP_Patterns.git"
+    }
+}
