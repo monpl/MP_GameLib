@@ -6,6 +6,6 @@
     "keywords": ["MonsterPlanet", "GameLib"],
 	"description": "MonsterPlanet's GameLib",
     "dependencies": {
-      "com.monsterplanet.patterns": "https://github.com/monpl/MP_Patterns.git"
+      "com.monsterplanet.patterns": "git@github.com:monpl/MP_Patterns.git"
     }
 }
