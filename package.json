@@ -5,7 +5,18 @@
     "unity": "2019.2",
     "keywords": ["MonsterPlanet", "GameLib"],
 	"description": "MonsterPlanet's GameLib",
+  
+    "scopedRegistries": [
+      {
+        "name": "MP_Patterns",
+        "url": "git@github.com:monpl/MP_Patterns.git",
+        "scopes": [
+          "com.monsterplanet.patterns"
+        ]
+      }
+    ],
+  
     "dependencies": {
-      "com.monsterplanet.patterns": "git@github.com:monpl/MP_Patterns.git"
+      "com.monsterplanet.patterns": "1.0.0"
     }
 }
