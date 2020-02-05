@@ -11,7 +11,6 @@ namespace MPGameLib.Tests
     {
         private string _testSfxName = "MP_TEST_SFX";
         
-        // A Test behaves as an ordinary method
         [Test, Order(0)]
         public void SoundManager_PreInitTest()
         {
@@ -59,6 +58,7 @@ namespace MPGameLib.Tests
             
             Debug.Log("SFX PlayEffect IN Loop!!"); 
             SoundManager.Instance.PlayEffectInLoop(_testSfxName);
+            
             Debug.Log("SFX PlayEffect SET PITCH!"); 
             SoundManager.Instance.SetSFXPitch(2.5f, 2f);
             yield return new WaitForSeconds(2f);
