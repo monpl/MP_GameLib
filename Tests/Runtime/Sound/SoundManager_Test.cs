@@ -9,14 +9,14 @@ namespace MPGameLib.Tests
 {
     public class SoundManager_Test
     {
-        private string _testSfxName = "TestSFX";
+        private string _testSfxName = "MP_TEST_SFX";
         
         // A Test behaves as an ordinary method
         [Test, Order(0)]
         public void SoundManager_PreInitTest()
         {
             SceneManager.LoadScene("TestScene", LoadSceneMode.Single);
-            SoundManager.Instance.PreInit(true, true, "Sounds/SFX", "Sounds/BGM", "Main");
+            SoundManager.Instance.PreInit(true, true, "MP_Test_Sounds/SFX", "MP_Test_Sounds/BGM", "MP_TEST_BGM_1");
         }
 
         [UnityTest, Order(1)]
@@ -39,7 +39,7 @@ namespace MPGameLib.Tests
             yield return new WaitForSeconds(1f);
             
             Debug.Log("BGM Change!!");
-            SoundManager.Instance.ChangeBgm("Main2");
+            SoundManager.Instance.ChangeBgm("MP_TEST_BGM_2");
             yield return new WaitForSeconds(1f);
             
             Debug.Log("BGM Pitch!!");
