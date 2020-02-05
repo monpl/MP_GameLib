@@ -70,8 +70,11 @@ namespace MPGameLib.Sound
 
         private void CreateSoundSources()
         {
-            _bgmSource = Instantiate(new GameObject(), transform).AddComponent<AudioSource>();
-            _sfxSource = Instantiate(new GameObject(), transform).AddComponent<AudioSource>();
+            _bgmSource = new GameObject("BgmSource").AddComponent<AudioSource>();
+            _sfxSource = new GameObject("SfxSource").AddComponent<AudioSource>();
+            
+            _bgmSource.transform.SetParent(transform);
+            _sfxSource.transform.SetParent(transform);
         }
 
         private void SettingSfx(string sfxRoot)
