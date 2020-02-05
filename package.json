@@ -1,7 +1,7 @@
 {
 	"name": "com.monsterplanet.gamelib",
 	"displayName":"MP_GameLib",
-	"version": "1.0.20",
+	"version": "1.0.21",
     "unity": "2019.2",
     "keywords": ["MonsterPlanet", "GameLib"],
 	"description": "MonsterPlanet's GameLib",
