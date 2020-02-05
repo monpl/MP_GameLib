@@ -19,8 +19,8 @@ namespace MPGameLib.Sound
     /// </summary>
     public class SoundManager : Singleton<SoundManager>
     {
-        [SerializeField] private AudioSource bgmSource;
-        [SerializeField] private AudioSource sfxSource;
+        private AudioSource _bgmSource;
+        private AudioSource _sfxSource;
 
         private Dictionary<string, AudioClip> _effectDic;
         private Dictionary<string, AudioClip> _bgmDic;
@@ -54,17 +54,24 @@ namespace MPGameLib.Sound
             if (_isPreInit)
                 return;
 
+            CreateSoundSources();
+
             _delaySfxQueue = new Queue<AudioClip>();
             _effectDic = new Dictionary<string, AudioClip>();
             _bgmDic = new Dictionary<string, AudioClip>();
 
             SettingSfx(sfxRoot);
             SettingBgm(bgmRoot, defaultBgmName);
+            _isPreInit = true;
 
             IsBgmOn = userBgmOn;
             IsSfxOn = userSfxOn;
+        }
 
-            _isPreInit = true;
+        private void CreateSoundSources()
+        {
+            _bgmSource = Instantiate(new GameObject(), transform).AddComponent<AudioSource>();
+            _sfxSource = Instantiate(new GameObject(), transform).AddComponent<AudioSource>();
         }
 
         private void SettingSfx(string sfxRoot)
@@ -77,7 +84,7 @@ namespace MPGameLib.Sound
 
         private void SettingBgm(string bgmRoot, string defaultBgmName)
         {
-            bgmSource.loop = true;
+            _bgmSource.loop = true;
 
             var bgmList = Resources.LoadAll<AudioClip>(bgmRoot);
 
@@ -85,9 +92,9 @@ namespace MPGameLib.Sound
                 _bgmDic.Add(bgm.name, bgm);
 
             if (_bgmDic.ContainsKey(defaultBgmName))
-                bgmSource.clip = _bgmDic[defaultBgmName];
+                _bgmSource.clip = _bgmDic[defaultBgmName];
             else
-                bgmSource.clip = _bgmDic[bgmList[0].name];
+                _bgmSource.clip = _bgmDic[bgmList[0].name];
         }
 
         /// <summary>
@@ -107,17 +114,17 @@ namespace MPGameLib.Sound
             {
                 case Sound.BgmAction.Play:
                     if (IsBgmOn)
-                        bgmSource.Play();
+                        _bgmSource.Play();
                     break;
                 case Sound.BgmAction.Pause:
-                    bgmSource.Pause();
+                    _bgmSource.Pause();
                     break;
                 case Sound.BgmAction.Resume:
                     if (IsBgmOn)
-                        bgmSource.UnPause();
+                        _bgmSource.UnPause();
                     break;
                 case Sound.BgmAction.Stop:
-                    bgmSource.Stop();
+                    _bgmSource.Stop();
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(action), action, null);
@@ -142,20 +149,30 @@ namespace MPGameLib.Sound
                 return;
             }
 
-            bgmSource.clip = _bgmDic[newBgmName];
+            _bgmSource.clip = _bgmDic[newBgmName];
+            _bgmSource.Play();
         }
 
         /// <summary>
-        /// Pitch를 설정한다.
+        /// BGM Pitch를 설정한다.
         /// </summary>
         /// <param name="pitch">pitch</param>
         /// <param name="time">Fade 시간</param>
-        public void SetPitch(float pitch, float time = 0.2f)
+        public void SetBGMPitch(float pitch, float time = 0.2f)
         {
-            bgmSource.DOKill();
-
-            if (IsBgmOn && bgmSource.isPlaying)
-                bgmSource.DOPitch(pitch, 0.2f);
+            _bgmSource.DOKill();
+            _bgmSource.DOPitch(pitch, time);
+        }
+        
+        /// <summary>
+        /// SFX Pitch를 설정한다.
+        /// </summary>
+        /// <param name="pitch">pitch</param>
+        /// <param name="time">Fade 시간</param>
+        public void SetSFXPitch(float pitch, float time = 0.2f)
+        {
+            _bgmSource.DOKill();
+            _sfxSource.DOPitch(pitch, time);
         }
 
         /// <summary>
@@ -177,7 +194,7 @@ namespace MPGameLib.Sound
             var sfxClip = _effectDic[sfxName];
             if (delay <= 0f)
             {
-                sfxSource.PlayOneShot(sfxClip);
+                _sfxSource.PlayOneShot(sfxClip);
             }
             else
             {
@@ -201,9 +218,9 @@ namespace MPGameLib.Sound
             if (!IsSfxOn || !_effectDic.ContainsKey(sfxName))
                 return;
 
-            sfxSource.loop = true;
-            sfxSource.clip = _effectDic[sfxName];
-            sfxSource.Play();
+            _sfxSource.loop = true;
+            _sfxSource.clip = _effectDic[sfxName];
+            _sfxSource.Play();
         }
 
         /// <summary>
@@ -217,8 +234,8 @@ namespace MPGameLib.Sound
                 return;
             }
 
-            sfxSource.loop = false;
-            sfxSource.Stop();
+            _sfxSource.loop = false;
+            _sfxSource.Stop();
         }
 
         private void DelayPlayEffect()
@@ -233,7 +250,7 @@ namespace MPGameLib.Sound
                 return;
 
             var sfxClip = _delaySfxQueue.Dequeue();
-            sfxSource.PlayOneShot(sfxClip);
+            _sfxSource.PlayOneShot(sfxClip);
         }
 
         private void OnApplicationPause(bool pauseStatus)
@@ -244,19 +261,19 @@ namespace MPGameLib.Sound
             if (pauseStatus)
             {
                 // background
-                if (sfxSource.isPlaying && IsSfxOn)
-                    sfxSource.Pause();
+                if (_sfxSource.isPlaying && IsSfxOn)
+                    _sfxSource.Pause();
 
-                if (bgmSource.isPlaying && IsBgmOn)
-                    bgmSource.Pause();
+                if (_bgmSource.isPlaying && IsBgmOn)
+                    _bgmSource.Pause();
             }
             else
             {
                 if (IsSfxOn)
-                    sfxSource.UnPause();
+                    _sfxSource.UnPause();
 
                 if (IsBgmOn)
-                    bgmSource.UnPause();
+                    _bgmSource.UnPause();
             }
         }
     }
