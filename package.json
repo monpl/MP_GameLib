@@ -6,6 +6,7 @@
     "keywords": ["MonsterPlanet", "GameLib"],
 	"description": "MonsterPlanet's GameLib",
     "dependencies": {
-      "com.monsterplanet.patterns": "git+ssh://git@github.com:monpl/MP_Patterns.git#v0.0.1"
+      "com.monsterplanet.patterns": "git+ssh://git@github.com:monpl/MP_Patterns.git#v0.0.1",
+      "com.demigiant.dotween": "git+ssh://git@github.com:yoshida190/dotween.git#v1.2.320-upm"
     }
 }
