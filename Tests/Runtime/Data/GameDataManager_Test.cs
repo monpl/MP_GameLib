@@ -22,7 +22,6 @@ namespace MPGameLib.Tests
             testInt = new SaveType<int>(222);
             testInt2 = new SaveType<int>(333333);
             floatTest3 = new SaveType<float>(1.33333f);
-            
         }
     }
     
