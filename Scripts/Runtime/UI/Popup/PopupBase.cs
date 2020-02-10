@@ -1,5 +1,6 @@
 using System.Collections;
 using DG.Tweening;
+using MPGameLib.Extensions;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -40,10 +41,11 @@ namespace MPGameLib.UI
 
         private RectTransform _popupCanvasTrs;
         private Vector2 _screenSize;
+        private float _dimmingTime;
         
         public bool IsShown { get; protected set; }
 
-        public virtual void PreInit(RectTransform popupCanvasTrs)
+        public virtual void PreInit(RectTransform popupCanvasTrs, float dimmingTime)
         {
             if (PreInitChildPopup() == false)
                 return;
@@ -56,6 +58,7 @@ namespace MPGameLib.UI
 
             _popupCanvasTrs = popupCanvasTrs;
             _popupRoot.SetActiveCanvasGroup(false);
+            _dimmingTime = dimmingTime; 
             IsShown = false;
             
             Invoke(nameof(GetScreenSize), 0.05f);
@@ -116,8 +119,9 @@ namespace MPGameLib.UI
         {
             transform.SetAsLastSibling();
             _popupTrs.DOKill();
+            _popupTrs.Reset();
             _popupTrs.localPosition = _oriLocalPos;
-            
+
             if (dimmingHave)
                 _dimmingImg.enabled = true;
 
@@ -126,32 +130,61 @@ namespace MPGameLib.UI
                 case PopupShowTransitionType.ScaleUp:
                     _popupTrs.localScale = new Vector3(0.5f, 0.5f);
                     _popupRoot.SetActiveCanvasGroup(true);
-                    yield return _popupTrs.DOScale(1f, showingTime).SetEase(Ease.OutBack).WaitForCompletion();
+
+                    if (isReOpen)
+                        _popupTrs.DOScale(1f, showingTime).SetEase(Ease.OutBack);
+                    else
+                        yield return _popupTrs.DOScale(1f, showingTime).SetEase(Ease.OutBack).WaitForCompletion();
                     break;
+
                 case PopupShowTransitionType.Up:
                     _popupTrs.localPosition = new Vector3(0, -_screenSize.y, 0);
                     _popupRoot.SetActiveCanvasGroup(true);
-                    yield return _popupTrs.DOLocalMoveY(0f, showingTime).SetEase(Ease.Linear).WaitForCompletion();
+
+                    if (isReOpen)
+                        _popupTrs.DOLocalMoveY(0f, showingTime).SetEase(Ease.Linear);
+                    else
+                        yield return _popupTrs.DOLocalMoveY(0f, showingTime).SetEase(Ease.Linear).WaitForCompletion();
                     break;
+
                 case PopupShowTransitionType.Down:
                     _popupTrs.localPosition = new Vector3(0, _screenSize.y, 0);
                     _popupRoot.SetActiveCanvasGroup(true);
-                    yield return _popupTrs.DOLocalMoveY(0f, showingTime).SetEase(Ease.Linear).WaitForCompletion();
+
+                    if (isReOpen)
+                        _popupTrs.DOLocalMoveY(0f, showingTime).SetEase(Ease.Linear);
+                    else
+                        yield return _popupTrs.DOLocalMoveY(0f, showingTime).SetEase(Ease.Linear).WaitForCompletion();
                     break;
+
                 case PopupShowTransitionType.Left:
                     _popupTrs.localPosition = new Vector3(-_screenSize.x, 0, 0);
                     _popupRoot.SetActiveCanvasGroup(true);
-                    yield return _popupTrs.DOLocalMoveX(0f, showingTime).SetEase(Ease.Linear).WaitForCompletion();
+
+                    if (isReOpen)
+                        _popupTrs.DOLocalMoveX(0f, showingTime).SetEase(Ease.Linear);
+                    else
+                        yield return _popupTrs.DOLocalMoveX(0f, showingTime).SetEase(Ease.Linear).WaitForCompletion();
                     break;
+
                 case PopupShowTransitionType.Right:
                     _popupTrs.localPosition = new Vector3(_screenSize.x, 0, 0);
                     _popupRoot.SetActiveCanvasGroup(true);
-                    yield return _popupTrs.DOLocalMoveX(0f, showingTime).SetEase(Ease.Linear).WaitForCompletion();
+
+                    if (isReOpen)
+                        _popupTrs.DOLocalMoveX(0f, showingTime).SetEase(Ease.Linear);
+                    else
+                        yield return _popupTrs.DOLocalMoveX(0f, showingTime).SetEase(Ease.Linear).WaitForCompletion();
                     break;
+                
                 default:
-                    _popupRoot.SetActiveCanvasGroup(true);
+                    _popupRoot.SetActiveCanvasGroup(true, showingTime);
+                    
+                    if(isReOpen)
+                        yield return new WaitForSeconds(showingTime);
                     break;
             }
+
             if(isReOpen == false)
                 ShowDone();
             else
@@ -183,13 +216,15 @@ namespace MPGameLib.UI
             if (dimmingHave)
                 _dimmingImg.enabled = false;
 
+            _popupRoot.SetActiveCanvasGroup(false, hidingTime);
+            
             IsShown = false;
             if (isTemporaryHide == false)
             {
                 switch (popupHideType)
                 {
                     case PopupHideTransitionType.ScaleDown:
-                        yield return _popupTrs.DOScale(0, hidingTime).SetEase(Ease.Linear).WaitForCompletion();
+                        yield return _popupTrs.DOScale(0, hidingTime).WaitForCompletion();
                         break;
                     case PopupHideTransitionType.Up:
                         yield return _popupTrs.DOLocalMoveY(_screenSize.y, hidingTime).SetEase(Ease.Linear).WaitForCompletion();
@@ -204,11 +239,25 @@ namespace MPGameLib.UI
                         yield return _popupTrs.DOLocalMoveX(_screenSize.x, hidingTime).SetEase(Ease.Linear).WaitForCompletion();
                         break;
                     default:
+                        yield return new WaitForSeconds(hidingTime);
                         break;
                 }
             }
 
             HideDone();
+        }
+
+        public void SetDimmingTween(bool enable, float time = 0.2f)
+        {
+            if(enable)
+                _dimmingImg.enabled = true;
+
+            _dimmingImg.DOKill();
+            _dimmingImg.DOFade(enable ? 0.5f : 0f, time).SetEase(Ease.Linear).OnComplete(() =>
+            {
+                if (enable == false)
+                    _dimmingImg.enabled = false;
+            });
         }
         
         public virtual void HideWill()

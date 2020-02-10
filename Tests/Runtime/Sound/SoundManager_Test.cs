@@ -14,7 +14,7 @@ namespace MPGameLib.Tests
         [Test, Order(0)]
         public void SoundManager_PreInitTest()
         {
-            SceneManager.LoadScene("TestScene", LoadSceneMode.Single);
+            SceneManager.LoadScene("SoundTestScene", LoadSceneMode.Single);
             SoundManager.Instance.PreInit(true, true, "MP_Test_Sounds/SFX", "MP_Test_Sounds/BGM", "MP_TEST_BGM_1");
         }
 
