@@ -8,7 +8,7 @@ namespace MPGameLib.UI.Editors
 {
     public class PopupBaseCreateEditor : Editor
     {
-        [MenuItem("GameObject/MPGameLib/Popups/PopupBase", false, 2)]
+        [MenuItem("GameObject/MPGameLib/Popup/PopupBase", false, 2)]
         static void CreateNewEmptyPopup()
         {
             // -----------------
