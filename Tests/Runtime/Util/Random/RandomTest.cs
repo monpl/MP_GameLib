@@ -24,7 +24,7 @@ namespace MPGameLib.Tests
             
             Debug.Log("----------");
             
-            RandomUtil.SetNewSeed(RandomTypeEnum.type1.IntValue());
+            RandomUtil.SetNextSeed(RandomTypeEnum.type1.IntValue());
             Debug.Log("---Set New Seed Type1!");
 
             for (var i = 0; i < 10; ++i)

@@ -44,7 +44,7 @@ namespace MPGameLib.Util.Random
             return randomDic[randomIdx].Next(min, max);
         }
 
-        public static void SetNewSeed(int randomIdx)
+        public static void SetNextSeed(int randomIdx)
         {
             var curRandom = randomDic[randomIdx];
             var nextSeed = curRandom.GetSeed() + 1;
