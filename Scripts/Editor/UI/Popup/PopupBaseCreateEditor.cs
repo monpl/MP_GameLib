@@ -6,8 +6,6 @@ using YCLib.Util.Editors;
 
 namespace MPGameLib.UI.Editors
 {
-    [CanEditMultipleObjects]
-    [CustomEditor(typeof(PopupBase))]
     public class PopupBaseCreateEditor : Editor
     {
         [MenuItem("GameObject/MPGameLib/Popups/PopupBase", false, 2)]
@@ -17,8 +15,9 @@ namespace MPGameLib.UI.Editors
             // Base Popup
             // Trs
             var popupBaseRectTrs = EditorUtil.CreateRectTransformNewObject("NewPopup", Selection.activeTransform);
+            var popupBaseObj = popupBaseRectTrs.gameObject;
             popupBaseRectTrs.SetStretchAll();
-            popupBaseRectTrs.gameObject.AddComponent<PopupBase>();
+            popupBaseObj.AddComponent<PopupBase>();
 
             // -----------------
             // Dimming
@@ -42,7 +41,9 @@ namespace MPGameLib.UI.Editors
             bg.SetStretchAll();
             bg.gameObject.AddComponent<Image>();
 
-            Selection.activeGameObject = popupBaseRectTrs.gameObject;
+            Selection.activeGameObject = popupBaseObj;
+            Undo.RegisterCreatedObjectUndo(popupBaseObj, "Create Popup");
+            Undo.RecordObject(popupBaseObj, "Create Popup");
         }
     }
 }
