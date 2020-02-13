@@ -1,16 +1,25 @@
 {
-	"name": "com.monsterplanet.gamelib",
-	"displayName":"MP_GameLib",
-	"version": "1.2.0",
-    "unity": "2019.2",
-    "keywords": ["MonsterPlanet", "GameLib"],
-	"description": "MonsterPlanet's GameLib",
-    "repository": {
-      "type": "git",
-      "url": "git+https://github.com/monpl/MP_GameLib.git"
-    },
-    "dependencies": {
-      "com.monsterplanet.patterns": "ssh://git@github.com/monpl/MP_Patterns.git#v1.0.1",
-      "com.demigiant.dotween": "ssh://git@github.com/monpl/dotween.git#v1.2.321-upm"
+  "name": "com.monsterplanet.gamelib",
+  "displayName": "MP_GameLib",
+  "version": "1.2.0",
+  "unity": "2019.2",
+  "keywords": [
+    "MonsterPlanet",
+    "GameLib"
+  ],
+  "description": "MonsterPlanet's GameLib",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/monpl/MP_GameLib.git"
+  },
+  "dependencies": {
+    "com.monsterplanet.patterns": "ssh://git@github.com/monpl/MP_Patterns.git#v1.0.1",
+    "com.demigiant.dotween": "ssh://git@github.com/monpl/dotween.git#v1.2.321-upm"
+  },
+  "samples": [
+    {
+      "displayName": "Tests",
+      "path": "Tests~"
     }
+  ]
 }
