@@ -183,7 +183,8 @@ namespace MPGameLib.Sound
         /// </summary>
         /// <param name="sfxName">효과음 이름</param>
         /// <param name="delay">딜레이</param>
-        public void PlayEffect(string sfxName, float delay = 0f)
+        /// <param name="isForce">강제로 사운드를 재생할건지</param>
+        public void PlayEffect(string sfxName, float delay = 0f, bool isForce = false)
         {
             if (!_isPreInit)
             {
@@ -191,7 +192,10 @@ namespace MPGameLib.Sound
                 return;
             }
 
-            if (!IsSfxOn || !_effectDic.ContainsKey(sfxName))
+            if (_effectDic.ContainsKey(sfxName) == false)
+                return;
+            
+            if (IsSfxOn == false && isForce == false)
                 return;
 
             var sfxClip = _effectDic[sfxName];
