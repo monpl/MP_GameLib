@@ -1,5 +1,9 @@
 # MP_GameLib Change log
 
+## [1.2.5] - 2020-02-14
+
+- [Fix] 이펙트 사운드 OnOff 상관 없이 플레이 가능하도록 추가
+
 ## [1.2.0] - 2020-02-12
 
 - [Add] PopupManager 추가
