@@ -1,0 +1,15 @@
+{
+  "name": "com.monsterplanet.gamelib",
+  "references": [
+    "com.monsterplanet.patterns",
+    "DOTween.Modules"
+  ],
+  "includePlatforms": [],
+  "excludePlatforms": [],
+  "allowUnsafeCode": false,
+  "overrideReferences": false,
+  "precompiledReferences": [],
+  "autoReferenced": true,
+  "defineConstraints": [],
+  "versionDefines": []
+}
