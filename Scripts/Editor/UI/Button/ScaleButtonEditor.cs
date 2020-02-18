@@ -2,31 +2,13 @@ using MPGameLib.Extensions;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
-using YCLib.Util.Editors;
 
 namespace MPGameLib.UI.Editors
 {
     [CanEditMultipleObjects]
     [CustomEditor(typeof(ScaleButton))]
     public class ScaleButtonEditor : Editor
-    {
-        [MenuItem("GameObject/MPGameLib/Button/ScaleButton", false, 2)]
-        static void Create()
-        {
-            // ------- Create code ---------
-            var scaleButtonTrs = EditorUtil.CreateRectTransformNewObject("ScaleButton", Selection.activeTransform);
-            var scaleButtonObj = scaleButtonTrs.gameObject;
-
-            var scaleButtonComponent = scaleButtonObj.AddComponent<ScaleButton>();
-            var scaleButton = scaleButtonObj.GetComponent<Button>();
-            
-            scaleButton.targetGraphic = scaleButtonComponent;
-            scaleButton.transition = Selectable.Transition.None;
-            // ------------------------------
-
-            Selection.activeGameObject = scaleButtonObj;
-        }
-
+    { 
         private void OnEnable()
         {
             var targetTrs = ((ScaleButton)target).GetComponent<RectTransform>();

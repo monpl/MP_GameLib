@@ -1,8 +1,6 @@
-using MPGameLib.UI;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
-using YCLib.Util.Editors;
 
 namespace MPGameLib.UI.Editors
 {
@@ -10,24 +8,6 @@ namespace MPGameLib.UI.Editors
     [CustomEditor(typeof(PressingButton))]
     public class PressingButtonEditor : Editor
     {
-        [MenuItem("GameObject/MPGameLib/Button/PressingButton", false, 2)]
-        static void Create()
-        {
-            // ------- Create code ---------
-            var pressingButtonTrs = EditorUtil.CreateRectTransformNewObject("PressingButton", Selection.activeTransform);
-            var pressingButtonObj = pressingButtonTrs.gameObject;
-            var pressingButtonComponent = pressingButtonObj.AddComponent<PressingButton>();
-
-            var scaleButton = pressingButtonObj.GetComponent<Button>();
-            scaleButton.targetGraphic = pressingButtonComponent;
-            scaleButton.transition = Selectable.Transition.None;
-            // ------------------------------
-
-            Selection.activeGameObject = pressingButtonObj;
-            Undo.RegisterCreatedObjectUndo(pressingButtonObj, "Create Pressing Button");
-            Undo.RecordObject(pressingButtonObj, "Create Pressing Button");
-        }
-        
         private void OnEnable()
         {
             var targetTrs = ((PressingButton)target).GetComponent<RectTransform>();
