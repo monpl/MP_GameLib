@@ -41,7 +41,13 @@ namespace MPGameLib.UI
             if (GUILayout.Button("Accept Image"))
             {
                 var button = ((PressingButton)target);
-                button.AcceptImages();
+                button.AcceptImages(false);
+            }
+
+            if (GUILayout.Button("Accept Image With Set Native"))
+            {
+                var button = ((PressingButton) target);
+                button.AcceptImages(true);
             }
 
             serializedObject.ApplyModifiedProperties();

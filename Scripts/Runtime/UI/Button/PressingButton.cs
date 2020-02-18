@@ -20,7 +20,7 @@ namespace MPGameLib.UI
                     return;
                 
                 pressingDown = value;
-                AcceptImages();
+                AcceptImages(false);
             }
         }
 
@@ -33,7 +33,7 @@ namespace MPGameLib.UI
                     return;
                     
                 buttonSprite = value;
-                AcceptImages();
+                AcceptImages(false);
             }
         }
 
@@ -46,7 +46,7 @@ namespace MPGameLib.UI
                     return;
                 
                 shadowColor = value;
-                AcceptImages();
+                AcceptImages(false);
             }
         }
 
@@ -72,7 +72,7 @@ namespace MPGameLib.UI
             _mainTrs.SetAsLastSibling();
         }
 
-        public void AcceptImages()
+        public void AcceptImages(bool isSetNative)
         {
             if (buttonSprite == null)
             {
@@ -80,26 +80,42 @@ namespace MPGameLib.UI
                 return;
             }
             
+            var rectTrs = GetComponent<RectTransform>();
             var border = buttonSprite.border;
             var isSliced = border.x > 0 || border.y > 0 || border.z > 0 || border.w > 0;
-            Debug.Log("isSliced: " + isSliced);
 
             MainImage.sprite = buttonSprite;
             ShadowImage.sprite = buttonSprite;
 
+            MainImage.type = isSliced ? Image.Type.Sliced : Image.Type.Simple;
+            ShadowImage.type = isSliced ? Image.Type.Sliced : Image.Type.Simple;
+
             if (isSliced)
             {
                 ShadowTrs.sizeDelta = MainTrs.sizeDelta;
+
+                MainImage.rectTransform.sizeDelta = rectTrs.sizeDelta;
+                ShadowImage.rectTransform.sizeDelta = rectTrs.sizeDelta;                
+
                 SetAllDirty();
             }
             else
             {
-                MainImage.SetNativeSize();
-                ShadowImage.SetNativeSize();
+                if (isSetNative)
+                {
+                    MainImage.SetNativeSize();
+                    ShadowImage.SetNativeSize();
+
+                    rectTrs.sizeDelta = MainImage.rectTransform.sizeDelta;
+                }
+                else
+                {
+                    MainImage.rectTransform.sizeDelta = rectTrs.sizeDelta;
+                    ShadowImage.rectTransform.sizeDelta = rectTrs.sizeDelta;
+                }
             }
 
             ShadowImage.color = shadowColor;
-
             ShadowTrs.localPosition = new Vector2(MainTrs.localPosition.x, MainTrs.localPosition.y - PressingDown);
         }
 
