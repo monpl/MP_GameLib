@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace YCLib.Util
+namespace MPGameLib.Util
 {
     public static class DeviceUtil
     {

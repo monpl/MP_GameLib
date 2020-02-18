@@ -1,7 +1,7 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace YCLib.Util.Editors
+namespace MPGameLib.Util
 {
     public static class EditorUtil
     {

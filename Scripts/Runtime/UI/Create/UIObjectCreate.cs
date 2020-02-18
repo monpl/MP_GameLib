@@ -1,10 +1,10 @@
 #if UNITY_EDITOR
 
 using MPGameLib.Extensions;
+using MPGameLib.Util;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
-using YCLib.Util.Editors;
 
 namespace MPGameLib.UI
 {
@@ -16,8 +16,7 @@ namespace MPGameLib.UI
         static void CreatePressingButton()
         {
             // ------- Create code ---------
-            var pressingButtonTrs =
-                EditorUtil.CreateRectTransformNewObject("PressingButton", Selection.activeTransform);
+            var pressingButtonTrs = EditorUtil.CreateRectTransformNewObject("PressingButton", Selection.activeTransform);
             var pressingButtonObj = pressingButtonTrs.gameObject;
             var pressingButtonComponent = pressingButtonObj.AddComponent<PressingButton>();
 

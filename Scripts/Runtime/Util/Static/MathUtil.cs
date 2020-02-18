@@ -2,7 +2,7 @@
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-namespace YCLib.Util
+namespace MPGameLib.Util
 {
     public class MathUtil
     {
@@ -104,7 +104,7 @@ namespace YCLib.Util
                 max = Mathf.Abs(max);
             }
             
-            return Random.Range(min, max) * (Random.Range(0, 2) == 0 ? 1 : -1);
+            return UnityEngine.Random.Range(min, max) * (UnityEngine.Random.Range(0, 2) == 0 ? 1 : -1);
         }
     }
 }

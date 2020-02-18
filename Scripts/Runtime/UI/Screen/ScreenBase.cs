@@ -1,7 +1,7 @@
 using System.Collections;
+using MPGameLib.Util;
 using UnityEngine;
 using UnityEngine.UI;
-using YCLib.Util;
 
 namespace MPGameLib.UI
 {

@@ -1,4 +1,4 @@
-namespace YCLib.Util
+namespace MPGameLib.Util
 {
     public static class ArrayUtil
     {

@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using MP_Patterns;
+using MPGameLib.Util;
 using UnityEngine;
 using UnityEngine.UI;
-using YCLib.Util;
 
 namespace MPGameLib.Effect
 {
