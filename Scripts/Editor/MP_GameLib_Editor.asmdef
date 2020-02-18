@@ -1,7 +1,8 @@
 {
-  "name": "com.monsterplanet.gamelib",
+  "name": "com.monsterplanet.gamelib.editor",
   "references": [
     "com.monsterplanet.patterns",
+    "com.monsterplanet.gamelib",
     "DOTween.Modules"
   ],
   "includePlatforms": [],
