@@ -2,7 +2,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace MPGameLib.UI.Editors
+namespace MPGameLib.UI
 {
     [CanEditMultipleObjects]
     [CustomEditor(typeof(PressingButton))]
