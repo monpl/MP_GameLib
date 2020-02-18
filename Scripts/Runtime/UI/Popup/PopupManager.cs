@@ -96,10 +96,12 @@ namespace MPGameLib.UI
             AddPopupAction(PopupAction.Show, showingPopup, delay);
         }
 
-        public T ShowPopup<T>(string showingPopup, float delay) where T : PopupBase
+        public T ShowPopup<T>(float delay = 0.0f) where T : PopupBase
         {
-            ShowPopup(showingPopup, delay);
-            return (T)PopupDic[showingPopup];
+            var popupName = nameof(T);
+            
+            ShowPopup(popupName, delay);
+            return (T)PopupDic[popupName];
         }
 
         public void PopHidePopup(float delay = 0.0f)
