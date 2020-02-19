@@ -98,7 +98,7 @@ namespace MPGameLib.UI
 
         public T ShowPopup<T>(float delay = 0.0f) where T : PopupBase
         {
-            var popupName = nameof(T);
+            var popupName = typeof(T).Name;
             
             ShowPopup(popupName, delay);
             return (T)PopupDic[popupName];
