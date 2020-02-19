@@ -13,8 +13,8 @@
     "url": "git+https://github.com/monpl/MP_GameLib.git"
   },
   "dependencies": {
-    "com.monsterplanet.patterns": "ssh://git@github.com/monpl/MP_Patterns.git#v1.0.1",
-    "com.demigiant.dotween": "ssh://git@github.com/monpl/dotween.git#v1.2.321-upm"
+    "com.monsterplanet.patterns": "https://github.com/monpl/MP_Patterns.git#v1.0.1",
+    "com.demigiant.dotween": "https://github.com/monpl/dotween.git#v1.2.321-upm"
   },
   "samples": [
     {
