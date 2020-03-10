@@ -40,7 +40,7 @@ namespace MPGameLib.Effect
 
         public void PlayEffect(string effectName, Vector2 spawnPos, Quaternion rotation = default)
         {
-            if (_effectDictionary.ContainsKey(effectName))
+            if (!_effectDictionary.ContainsKey(effectName))
                 return;
 
             var effect = _effectDictionary[effectName].Pop();
