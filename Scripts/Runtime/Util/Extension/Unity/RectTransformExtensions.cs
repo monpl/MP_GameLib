@@ -46,5 +46,19 @@ namespace MPGameLib.Extensions
 
             return rt;
         }
+        
+        public static RectTransform SetStretchLeft(this RectTransform rt, float width)
+        {
+            rt.localPosition = Vector3.zero;
+            rt.anchorMin = Vector2.zero;
+            rt.anchorMax = new Vector2(0, 1f);
+            rt.pivot = new Vector2(0, 0.5f);
+            
+            rt.SetSizeDeltaX(width);
+            rt.SetTop(0f);
+            rt.SetBottom(0f);
+
+            return rt;
+        }
     }
 }

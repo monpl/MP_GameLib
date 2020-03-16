@@ -3,7 +3,9 @@
 using MPGameLib.Extensions;
 using MPGameLib.Util;
 using UnityEditor;
+using UnityEditor.Events;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 namespace MPGameLib.UI
@@ -25,9 +27,7 @@ namespace MPGameLib.UI
             scaleButton.transition = Selectable.Transition.None;
             // ------------------------------
 
-            Selection.activeGameObject = pressingButtonObj;
-            Undo.RegisterCreatedObjectUndo(pressingButtonObj, "Create Pressing Button");
-            Undo.RecordObject(pressingButtonObj, "Create Pressing Button");
+            EditorUtil.RegisterObject(pressingButtonObj, "Create Pressing Button");
         }
         
         [MenuItem("GameObject/MPGameLib/Button/ScaleButton", false, 2)]
@@ -44,7 +44,7 @@ namespace MPGameLib.UI
             scaleButton.transition = Selectable.Transition.None;
             // ------------------------------
 
-            Selection.activeGameObject = scaleButtonObj;
+            EditorUtil.RegisterObject(scaleButtonObj, "Create Scale Button");
         }
         
         #endregion
@@ -142,6 +142,53 @@ namespace MPGameLib.UI
         
         #endregion
         
+        #region ScrollView
+
+        [MenuItem("GameObject/MPGameLib/ScrollView/SnapScrollView_Horizontal")]
+        static void CreateSnapScrollView()
+        {
+            // ------- Create code ---------
+            var snapScrollViewTrs = EditorUtil.CreateRectTransformNewObject("SnapScrollView_Horizontal", Selection.activeTransform);
+            var snapScrollViewObj = snapScrollViewTrs.gameObject;
+
+            var snapScrollViewComponent = snapScrollViewObj.AddComponent<HorizontalSnapScrollView>();
+            var scrollRect = snapScrollViewComponent.ScrollRect;
+            var viewPortTrs = EditorUtil.CreateRectTransformNewObject("Viewport", snapScrollViewTrs);
+            var contentTrs = EditorUtil.CreateRectTransformNewObject("Content", viewPortTrs);
+            var dotRootTrs = EditorUtil.CreateRectTransformNewObject("Dots", snapScrollViewTrs);
+            var exampleDotTrs = EditorUtil.CreateRectTransformNewObject("Dot", snapScrollViewTrs);
+            var pageSampleTrs = EditorUtil.CreateRectTransformNewObject("Page1", contentTrs);
+            
+            snapScrollViewTrs.sizeDelta = new Vector2(500f, 500f);
+
+            viewPortTrs.gameObject.AddComponent<RectMask2D>();
+            viewPortTrs.SetStretchAll();
+            contentTrs.SetStretchLeft(100f);
+            
+            var dotImage = exampleDotTrs.gameObject.AddComponent<Image>();
+            dotImage.sprite = Resources.Load<Sprite>("unity_builtin_extra/Knob");
+            exampleDotTrs.sizeDelta = new Vector2(50, 50);
+            exampleDotTrs.gameObject.SetActive(false);
+            
+            snapScrollViewComponent.contentRoot = contentTrs;
+            snapScrollViewComponent.dotsRoot = dotRootTrs;
+            snapScrollViewComponent.dotPrefab = dotImage;
+
+            scrollRect.vertical = false;
+            scrollRect.movementType = ScrollRect.MovementType.Clamped;
+            UnityEventTools.AddPersistentListener(scrollRect.onValueChanged, snapScrollViewComponent.OnValueChanged);
+            scrollRect.viewport = viewPortTrs;
+            scrollRect.content = contentTrs;
+
+            pageSampleTrs.SetStretchLeft(snapScrollViewTrs.sizeDelta.x);
+            pageSampleTrs.SetAnchoredPositionX(0f);
+            // ------------------------------
+            
+            EditorUtil.RegisterObject(snapScrollViewObj, "Create Snap Scroll View");
+        }
+        
+        #endregion
+        
         #region UI Objects
         
         [MenuItem("GameObject/UI/Image_NoneRay", false, 2002)]
@@ -153,9 +200,7 @@ namespace MPGameLib.UI
 
             image.raycastTarget = false;
 
-            Selection.activeGameObject = imageObj;
-            Undo.RegisterCreatedObjectUndo(imageObj, "Create Image");
-            Undo.RecordObject(imageObj, "Create Image");
+            EditorUtil.RegisterObject(imageObj, "Create Image");
         }
 
         [MenuItem("GameObject/UI/Text_NoneRay", false, 2000)]
@@ -167,9 +212,7 @@ namespace MPGameLib.UI
 
             text.raycastTarget = false;
 
-            Selection.activeGameObject = textObj;
-            Undo.RegisterCreatedObjectUndo(textObj, "Create Text");
-            Undo.RecordObject(textObj, "Create Text");
+            EditorUtil.RegisterObject(textObj, "Create Text");
         }
         
         #endregion

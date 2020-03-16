@@ -1,3 +1,5 @@
+#if UNITY_EDITOR
+
 using UnityEditor;
 using UnityEngine;
 
@@ -14,5 +16,14 @@ namespace MPGameLib.Util
 
             return newObjectRectTrs;
         }
+
+        public static void RegisterObject(GameObject obj, string desc)
+        {
+            Selection.activeGameObject = obj;
+            Undo.RegisterCreatedObjectUndo(obj, desc);
+            Undo.RecordObject(obj, desc);
+        }
     }
 }
+
+#endif
