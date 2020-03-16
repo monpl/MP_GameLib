@@ -5,7 +5,6 @@ using MPGameLib.Util;
 using UnityEditor;
 using UnityEditor.Events;
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.UI;
 
 namespace MPGameLib.UI
@@ -13,12 +12,13 @@ namespace MPGameLib.UI
     public static class UIObjectCreate
     {
         #region Buttons
-        
+
         [MenuItem("GameObject/MPGameLib/Button/PressingButton", false, 2)]
         static void CreatePressingButton()
         {
             // ------- Create code ---------
-            var pressingButtonTrs = EditorUtil.CreateRectTransformNewObject("PressingButton", Selection.activeTransform);
+            var pressingButtonTrs =
+                EditorUtil.CreateRectTransformNewObject("PressingButton", Selection.activeTransform);
             var pressingButtonObj = pressingButtonTrs.gameObject;
             var pressingButtonComponent = pressingButtonObj.AddComponent<PressingButton>();
 
@@ -29,7 +29,7 @@ namespace MPGameLib.UI
 
             EditorUtil.RegisterObject(pressingButtonObj, "Create Pressing Button");
         }
-        
+
         [MenuItem("GameObject/MPGameLib/Button/ScaleButton", false, 2)]
         static void CreateScaleButton()
         {
@@ -39,14 +39,14 @@ namespace MPGameLib.UI
 
             var scaleButtonComponent = scaleButtonObj.AddComponent<ScaleButton>();
             var scaleButton = scaleButtonObj.GetComponent<Button>();
-            
+
             scaleButton.targetGraphic = scaleButtonComponent;
             scaleButton.transition = Selectable.Transition.None;
             // ------------------------------
 
             EditorUtil.RegisterObject(scaleButtonObj, "Create Scale Button");
         }
-        
+
         #endregion
 
         #region Popups
@@ -90,14 +90,14 @@ namespace MPGameLib.UI
         }
 
         #endregion
-        
+
         #region Screens
-        
+
         [MenuItem("GameObject/MPGameLib/Screen/ScreenBase", false, 2)]
         static void CreateScreenBase()
         {
             // AddSortingLayer("UI");
-            
+
             var screenRectTrs = EditorUtil.CreateRectTransformNewObject("NewScreen", Selection.activeTransform);
             var screenObj = screenRectTrs.gameObject;
 
@@ -107,48 +107,50 @@ namespace MPGameLib.UI
             screenObj.AddComponent<ScreenBase>();
 
             screenCanvas.renderMode = RenderMode.ScreenSpaceOverlay;
-            
+
             screenScaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
             screenScaler.referenceResolution = new Vector2(1080f, 1920f);
             screenScaler.screenMatchMode = CanvasScaler.ScreenMatchMode.MatchWidthOrHeight;
             screenScaler.matchWidthOrHeight = 1f;
-            
+
             Selection.activeGameObject = screenObj;
-            
+
             Undo.RegisterCreatedObjectUndo(screenObj, "Create Screen");
             Undo.RecordObject(screenObj, "Create Screen");
         }
 
         static void AddSortingLayer(string addSortString)
         {
-            var tagsAndLayersManager = new SerializedObject(AssetDatabase.LoadAllAssetsAtPath("ProjectSettings/TagManager.asset")[0]);
+            var tagsAndLayersManager =
+                new SerializedObject(AssetDatabase.LoadAllAssetsAtPath("ProjectSettings/TagManager.asset")[0]);
             var sortingLayers = tagsAndLayersManager.FindProperty("m_SortingLayers");
             sortingLayers.InsertArrayElementAtIndex(sortingLayers.arraySize);
-            
+
             var layerName = addSortString;
             for (int i = 0; i < sortingLayers.arraySize; i++)
             {
                 if (sortingLayers.GetArrayElementAtIndex(i).FindPropertyRelative("name").stringValue.Equals(layerName))
                     return;
             }
-            
+
             sortingLayers.InsertArrayElementAtIndex(sortingLayers.arraySize);
             var newLayer = sortingLayers.GetArrayElementAtIndex(sortingLayers.arraySize - 1);
             newLayer.FindPropertyRelative("name").stringValue = layerName;
             newLayer.FindPropertyRelative("uniqueID").intValue = layerName.GetHashCode();
-            
+
             tagsAndLayersManager.ApplyModifiedProperties();
         }
-        
+
         #endregion
-        
+
         #region ScrollView
 
         [MenuItem("GameObject/MPGameLib/ScrollView/SnapScrollView_Horizontal")]
         static void CreateSnapScrollView()
         {
             // ------- Create code ---------
-            var snapScrollViewTrs = EditorUtil.CreateRectTransformNewObject("SnapScrollView_Horizontal", Selection.activeTransform);
+            var snapScrollViewTrs =
+                EditorUtil.CreateRectTransformNewObject("SnapScrollView_Horizontal", Selection.activeTransform);
             var snapScrollViewObj = snapScrollViewTrs.gameObject;
 
             var snapScrollViewComponent = snapScrollViewObj.AddComponent<HorizontalSnapScrollView>();
@@ -158,18 +160,18 @@ namespace MPGameLib.UI
             var dotRootTrs = EditorUtil.CreateRectTransformNewObject("Dots", snapScrollViewTrs);
             var exampleDotTrs = EditorUtil.CreateRectTransformNewObject("Dot", snapScrollViewTrs);
             var pageSampleTrs = EditorUtil.CreateRectTransformNewObject("Page1", contentTrs);
-            
+
             snapScrollViewTrs.sizeDelta = new Vector2(500f, 500f);
 
             viewPortTrs.gameObject.AddComponent<RectMask2D>();
             viewPortTrs.SetStretchAll();
             contentTrs.SetStretchLeft(100f);
-            
+
             var dotImage = exampleDotTrs.gameObject.AddComponent<Image>();
             dotImage.sprite = Resources.Load<Sprite>("unity_builtin_extra/Knob");
             exampleDotTrs.sizeDelta = new Vector2(50, 50);
             exampleDotTrs.gameObject.SetActive(false);
-            
+
             snapScrollViewComponent.contentRoot = contentTrs;
             snapScrollViewComponent.dotsRoot = dotRootTrs;
             snapScrollViewComponent.dotPrefab = dotImage;
@@ -183,14 +185,14 @@ namespace MPGameLib.UI
             pageSampleTrs.SetStretchLeft(snapScrollViewTrs.sizeDelta.x);
             pageSampleTrs.SetAnchoredPositionX(0f);
             // ------------------------------
-            
+
             EditorUtil.RegisterObject(snapScrollViewObj, "Create Snap Scroll View");
         }
-        
+
         #endregion
-        
+
         #region UI Objects
-        
+
         [MenuItem("GameObject/UI/Image_NoneRay", false, 2002)]
         static void CreateImage_NoneRay()
         {
@@ -214,7 +216,7 @@ namespace MPGameLib.UI
 
             EditorUtil.RegisterObject(textObj, "Create Text");
         }
-        
+
         #endregion
     }
 }
