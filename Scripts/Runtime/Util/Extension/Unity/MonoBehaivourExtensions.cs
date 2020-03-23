@@ -17,7 +17,7 @@ namespace MPGameLib.Extensions
         public static Coroutine RestartCoroutine(this MonoBehaviour mono, IEnumerator routine, Coroutine co)
         {
             mono.StopAndNullCoroutine(co);
-            mono.StartCoroutine(routine);
+            co = mono.StartCoroutine(routine);
 
             return co;
         }
