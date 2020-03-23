@@ -6,6 +6,12 @@ using DG.Tweening;
 
 namespace MPGameLib.Sound
 {
+    public enum SoundType
+    {
+        Bgm,
+        Sfx,
+        Vibrate,
+    }
     public enum BgmAction
     {
         Play,
@@ -25,12 +31,11 @@ namespace MPGameLib.Sound
         private Dictionary<string, AudioClip> _effectDic;
         private Dictionary<string, AudioClip> _bgmDic;
         private Queue<AudioClip> _delaySfxQueue;
-
-        public bool IsSfxOn { get; set; }
-
-        private bool _isBgmOn;
+        
+        private const string PlayerPrefs_PREFIX = "MPGameLib_SKILLZ_SOUNDMGR_";
         private bool _isPreInit;
 
+        private bool _isBgmOn;
         public bool IsBgmOn
         {
             get => _isBgmOn;
@@ -38,18 +43,42 @@ namespace MPGameLib.Sound
             {
                 _isBgmOn = value;
                 BgmAction(_isBgmOn ? Sound.BgmAction.Play : Sound.BgmAction.Stop);
+                SaveToPrefs(SoundType.Bgm, _isBgmOn);
+            }
+        }
+        
+        private bool _isSfxOn;
+        public bool IsSfxOn
+        {
+            get => _isSfxOn;
+            set
+            {
+                _isSfxOn = value;
+                SaveToPrefs(SoundType.Sfx, _isSfxOn);
+            }
+        }
+        
+        private bool _isVibrateOn;
+        public bool IsVibrateOn
+        {
+            get => _isVibrateOn;
+            set
+            {
+                _isVibrateOn = value;
+                SaveToPrefs(SoundType.Sfx, _isVibrateOn);
             }
         }
 
         /// <summary>
         /// 사운드 매니저 초기화
         /// </summary>
-        /// <param name="userBgmOn">BGM을 킬 것인가</param>
-        /// <param name="userSfxOn">효과음을 킬 것인가</param>
+        /// <param name="defaultUserBgmOn">BGM 기본값</param>
+        /// <param name="defaultUserSfxOn">효과음 기본값</param>
+        /// <param name="defaultUserVibrateOn">진동 기본값</param>
         /// <param name="sfxRoot">효과음 폴더 Root</param>
         /// <param name="bgmRoot">BGM폴더 Root</param>
         /// <param name="defaultBgmName">기본 BGM 파일 이름</param>
-        public void PreInit(bool userBgmOn, bool userSfxOn, string sfxRoot, string bgmRoot, string defaultBgmName)
+        public void PreInit(bool defaultUserBgmOn, bool defaultUserSfxOn, bool defaultUserVibrateOn, string sfxRoot, string bgmRoot, string defaultBgmName)
         {
             if (_isPreInit)
                 return;
@@ -64,8 +93,9 @@ namespace MPGameLib.Sound
             SettingBgm(bgmRoot, defaultBgmName);
             _isPreInit = true;
 
-            IsBgmOn = userBgmOn;
-            IsSfxOn = userSfxOn;
+            IsBgmOn = GetPrefsSoundInfo(SoundType.Bgm, defaultUserBgmOn);
+            IsSfxOn = GetPrefsSoundInfo(SoundType.Sfx, defaultUserSfxOn);
+            IsVibrateOn = GetPrefsSoundInfo(SoundType.Vibrate, defaultUserVibrateOn);
         }
 
         private void CreateSoundSources()
@@ -258,6 +288,16 @@ namespace MPGameLib.Sound
 
             var sfxClip = _delaySfxQueue.Dequeue();
             _sfxSource.PlayOneShot(sfxClip);
+        }
+
+        private bool GetPrefsSoundInfo(SoundType soundType, bool defaultOn)
+        {
+            return PlayerPrefs.GetInt(PlayerPrefs_PREFIX + soundType, defaultOn ? 1 : 0) == 1;
+        }
+
+        private void SaveToPrefs(SoundType soundType, bool isOn)
+        {
+            PlayerPrefs.SetInt(PlayerPrefs_PREFIX + soundType, isOn ? 1 : 0);
         }
 
         private void OnApplicationPause(bool pauseStatus)
