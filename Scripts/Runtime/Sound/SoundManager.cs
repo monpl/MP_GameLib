@@ -290,6 +290,14 @@ namespace MPGameLib.Sound
             _sfxSource.PlayOneShot(sfxClip);
         }
 
+        public void PlayVibrate()
+        {
+            if (IsVibrateOn == false)
+                return;
+            
+            Handheld.Vibrate();
+        }
+
         private bool GetPrefsSoundInfo(SoundType soundType, bool defaultOn)
         {
             return PlayerPrefs.GetInt(PlayerPrefs_PREFIX + soundType, defaultOn ? 1 : 0) == 1;
