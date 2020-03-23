@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,7 +13,15 @@ namespace MPGameLib.Extensions
             
             co = null;
         }
-        
+
+        public static Coroutine RestartCoroutine(this MonoBehaviour mono, IEnumerator routine, Coroutine co)
+        {
+            mono.StopAndNullCoroutine(co);
+            mono.StartCoroutine(routine);
+
+            return co;
+        }
+
         /// <summary>
         /// 자신의 child 찾는 함수, 만약 자식의 자식인 경우, (button/circle/bg) 이런식으로 계층을 적어준다. 
         /// </summary>
