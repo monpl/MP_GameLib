@@ -33,6 +33,7 @@ namespace MPGameLib.UI
         [SerializeField] private PopupHideTransitionType popupHideType;
         [SerializeField] private Ease showEase = Ease.Linear;
         [SerializeField] private Ease hideEase = Ease.Linear;
+        [SerializeField] private float startPopupAlpha = 0.5f;
         [SerializeField] private float showingTime = 0.3f;
         [SerializeField] private float hidingTime = 0.3f;
         [SerializeField] private bool dimmingHave = true;
@@ -133,7 +134,8 @@ namespace MPGameLib.UI
             {
                 case PopupShowTransitionType.ScaleUp:
                     _popupTrs.localScale = new Vector3(0.5f, 0.5f);
-                    _popupRoot.SetActiveCanvasGroup(true);
+                    _popupRoot.SetAlpha(startPopupAlpha);
+                    _popupRoot.SetActiveCanvasGroup(true, showingTime);
 
                     if (isReOpen)
                         _popupTrs.DOScale(1f, showingTime).SetEase(showEase);
@@ -143,7 +145,8 @@ namespace MPGameLib.UI
 
                 case PopupShowTransitionType.Up:
                     _popupTrs.localPosition = new Vector3(0, -_screenSize.y, 0);
-                    _popupRoot.SetActiveCanvasGroup(true);
+                    _popupRoot.SetAlpha(startPopupAlpha);
+                    _popupRoot.SetActiveCanvasGroup(true, showingTime);
 
                     if (isReOpen)
                         _popupTrs.DOLocalMoveY(0f, showingTime).SetEase(showEase);
@@ -153,7 +156,8 @@ namespace MPGameLib.UI
 
                 case PopupShowTransitionType.Down:
                     _popupTrs.localPosition = new Vector3(0, _screenSize.y, 0);
-                    _popupRoot.SetActiveCanvasGroup(true);
+                    _popupRoot.SetAlpha(startPopupAlpha);
+                    _popupRoot.SetActiveCanvasGroup(true, showingTime);
 
                     if (isReOpen)
                         _popupTrs.DOLocalMoveY(0f, showingTime).SetEase(showEase);
@@ -163,7 +167,8 @@ namespace MPGameLib.UI
 
                 case PopupShowTransitionType.Left:
                     _popupTrs.localPosition = new Vector3(-_screenSize.x, 0, 0);
-                    _popupRoot.SetActiveCanvasGroup(true);
+                    _popupRoot.SetAlpha(startPopupAlpha);
+                    _popupRoot.SetActiveCanvasGroup(true, showingTime);
 
                     if (isReOpen)
                         _popupTrs.DOLocalMoveX(0f, showingTime).SetEase(showEase);
@@ -173,7 +178,8 @@ namespace MPGameLib.UI
 
                 case PopupShowTransitionType.Right:
                     _popupTrs.localPosition = new Vector3(_screenSize.x, 0, 0);
-                    _popupRoot.SetActiveCanvasGroup(true);
+                    _popupRoot.SetAlpha(startPopupAlpha);
+                    _popupRoot.SetActiveCanvasGroup(true, showingTime);
 
                     if (isReOpen)
                         _popupTrs.DOLocalMoveX(0f, showingTime).SetEase(showEase);
