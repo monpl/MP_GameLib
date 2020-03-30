@@ -15,6 +15,11 @@ namespace MPGameLib.UI
             canvasGroup = GetComponent<CanvasGroup>();
         }
 
+        public void SetAlpha(float alpha)
+        {
+            canvasGroup.alpha = alpha;
+        }
+
         public void SetActiveCanvasGroup(bool enable, float fadeTime = 0.0f)
         {
             if (canvasGroup == null)

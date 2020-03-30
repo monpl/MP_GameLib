@@ -29,6 +29,8 @@ namespace MPGameLib.UI
     {
         [SerializeField] private PopupShowTransitionType popupShowType; 
         [SerializeField] private PopupHideTransitionType popupHideType;
+        [SerializeField] private Ease showEase = Ease.Linear;
+        [SerializeField] private Ease hideEase = Ease.Linear;
         [SerializeField] private float showingTime = 0.3f;
         [SerializeField] private float hidingTime = 0.3f;
         [SerializeField] private bool dimmingHave = true;
@@ -132,9 +134,9 @@ namespace MPGameLib.UI
                     _popupRoot.SetActiveCanvasGroup(true);
 
                     if (isReOpen)
-                        _popupTrs.DOScale(1f, showingTime).SetEase(Ease.OutBack);
+                        _popupTrs.DOScale(1f, showingTime).SetEase(showEase);
                     else
-                        yield return _popupTrs.DOScale(1f, showingTime).SetEase(Ease.OutBack).WaitForCompletion();
+                        yield return _popupTrs.DOScale(1f, showingTime).SetEase(showEase).WaitForCompletion();
                     break;
 
                 case PopupShowTransitionType.Up:
@@ -142,9 +144,9 @@ namespace MPGameLib.UI
                     _popupRoot.SetActiveCanvasGroup(true);
 
                     if (isReOpen)
-                        _popupTrs.DOLocalMoveY(0f, showingTime).SetEase(Ease.Linear);
+                        _popupTrs.DOLocalMoveY(0f, showingTime).SetEase(showEase);
                     else
-                        yield return _popupTrs.DOLocalMoveY(0f, showingTime).SetEase(Ease.Linear).WaitForCompletion();
+                        yield return _popupTrs.DOLocalMoveY(0f, showingTime).SetEase(showEase).WaitForCompletion();
                     break;
 
                 case PopupShowTransitionType.Down:
@@ -152,9 +154,9 @@ namespace MPGameLib.UI
                     _popupRoot.SetActiveCanvasGroup(true);
 
                     if (isReOpen)
-                        _popupTrs.DOLocalMoveY(0f, showingTime).SetEase(Ease.Linear);
+                        _popupTrs.DOLocalMoveY(0f, showingTime).SetEase(showEase);
                     else
-                        yield return _popupTrs.DOLocalMoveY(0f, showingTime).SetEase(Ease.Linear).WaitForCompletion();
+                        yield return _popupTrs.DOLocalMoveY(0f, showingTime).SetEase(showEase).WaitForCompletion();
                     break;
 
                 case PopupShowTransitionType.Left:
@@ -162,9 +164,9 @@ namespace MPGameLib.UI
                     _popupRoot.SetActiveCanvasGroup(true);
 
                     if (isReOpen)
-                        _popupTrs.DOLocalMoveX(0f, showingTime).SetEase(Ease.Linear);
+                        _popupTrs.DOLocalMoveX(0f, showingTime).SetEase(showEase);
                     else
-                        yield return _popupTrs.DOLocalMoveX(0f, showingTime).SetEase(Ease.Linear).WaitForCompletion();
+                        yield return _popupTrs.DOLocalMoveX(0f, showingTime).SetEase(showEase).WaitForCompletion();
                     break;
 
                 case PopupShowTransitionType.Right:
@@ -172,9 +174,9 @@ namespace MPGameLib.UI
                     _popupRoot.SetActiveCanvasGroup(true);
 
                     if (isReOpen)
-                        _popupTrs.DOLocalMoveX(0f, showingTime).SetEase(Ease.Linear);
+                        _popupTrs.DOLocalMoveX(0f, showingTime).SetEase(showEase);
                     else
-                        yield return _popupTrs.DOLocalMoveX(0f, showingTime).SetEase(Ease.Linear).WaitForCompletion();
+                        yield return _popupTrs.DOLocalMoveX(0f, showingTime).SetEase(showEase).WaitForCompletion();
                     break;
                 
                 default:
@@ -224,19 +226,19 @@ namespace MPGameLib.UI
                 switch (popupHideType)
                 {
                     case PopupHideTransitionType.ScaleDown:
-                        yield return _popupTrs.DOScale(0, hidingTime).WaitForCompletion();
+                        yield return _popupTrs.DOScale(0, hidingTime).SetEase(hideEase).WaitForCompletion();
                         break;
                     case PopupHideTransitionType.Up:
-                        yield return _popupTrs.DOLocalMoveY(_screenSize.y, hidingTime).SetEase(Ease.Linear).WaitForCompletion();
+                        yield return _popupTrs.DOLocalMoveY(_screenSize.y, hidingTime).SetEase(hideEase).WaitForCompletion();
                         break;
                     case PopupHideTransitionType.Down:
-                        yield return _popupTrs.DOLocalMoveY(-_screenSize.y, hidingTime).SetEase(Ease.Linear).WaitForCompletion();
+                        yield return _popupTrs.DOLocalMoveY(-_screenSize.y, hidingTime).SetEase(hideEase).WaitForCompletion();
                         break;
                     case PopupHideTransitionType.Left:
-                        yield return _popupTrs.DOLocalMoveX(-_screenSize.x, hidingTime).SetEase(Ease.Linear).WaitForCompletion();
+                        yield return _popupTrs.DOLocalMoveX(-_screenSize.x, hidingTime).SetEase(hideEase).WaitForCompletion();
                         break;
                     case PopupHideTransitionType.Right:
-                        yield return _popupTrs.DOLocalMoveX(_screenSize.x, hidingTime).SetEase(Ease.Linear).WaitForCompletion();
+                        yield return _popupTrs.DOLocalMoveX(_screenSize.x, hidingTime).SetEase(hideEase).WaitForCompletion();
                         break;
                     default:
                         yield return new WaitForSeconds(hidingTime);
