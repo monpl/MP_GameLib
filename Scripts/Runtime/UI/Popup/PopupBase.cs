@@ -14,6 +14,7 @@ namespace MPGameLib.UI
         Down,
         Left,
         Right,
+        Custom,
     }
     public enum PopupHideTransitionType
     {
@@ -23,6 +24,7 @@ namespace MPGameLib.UI
         Down,
         Left,
         Right,
+        Custom,
     }
     
     public class PopupBase : MonoBehaviour
@@ -35,9 +37,9 @@ namespace MPGameLib.UI
         [SerializeField] private float hidingTime = 0.3f;
         [SerializeField] private bool dimmingHave = true;
 
-        private CanvasRootObject _popupRoot;
-        private Transform _popupTrs;
-        private Vector2 _oriLocalPos;
+        protected CanvasRootObject _popupRoot;
+        protected Transform _popupTrs;
+        protected Vector2 _oriLocalPos;
         
         private Image _dimmingImg;
 
@@ -178,7 +180,12 @@ namespace MPGameLib.UI
                     else
                         yield return _popupTrs.DOLocalMoveX(0f, showingTime).SetEase(showEase).WaitForCompletion();
                     break;
-                
+                case PopupShowTransitionType.Custom:
+                    if (isReOpen)
+                        ShowPopupCustom();
+                    else
+                        yield return ShowPopupCustom();
+                    break;
                 default:
                     _popupRoot.SetActiveCanvasGroup(true, showingTime);
                     
@@ -194,6 +201,16 @@ namespace MPGameLib.UI
                 SetGoodsArea();
                 IsShown = true;
             }
+        }
+
+        protected virtual YieldInstruction ShowPopupCustom()
+        {
+            return (YieldInstruction) null;
+        }
+        
+        protected virtual YieldInstruction HidePopupCustom()
+        {
+            return (YieldInstruction) null;
         }
 
         public virtual void SetGoodsArea()
@@ -239,6 +256,9 @@ namespace MPGameLib.UI
                         break;
                     case PopupHideTransitionType.Right:
                         yield return _popupTrs.DOLocalMoveX(_screenSize.x, hidingTime).SetEase(hideEase).WaitForCompletion();
+                        break;
+                    case PopupHideTransitionType.Custom:
+                        yield return HidePopupCustom();
                         break;
                     default:
                         yield return new WaitForSeconds(hidingTime);
