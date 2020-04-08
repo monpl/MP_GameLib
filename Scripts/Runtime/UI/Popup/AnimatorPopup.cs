@@ -8,8 +8,8 @@ namespace MPGameLib.UI
     {
         [SerializeField] private bool haveInAnimation = true;
 
-        private readonly string animationIn = "In";
-        private readonly string animationReset = "Reset";
+        protected string animationIn = "In"; 
+        protected string animationReset = "Reset";
 
         protected Animator popupAnimator;
 
