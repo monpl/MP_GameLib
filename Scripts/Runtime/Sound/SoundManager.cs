@@ -65,7 +65,7 @@ namespace MPGameLib.Sound
             set
             {
                 _isVibrateOn = value;
-                SaveToPrefs(SoundType.Sfx, _isVibrateOn);
+                SaveToPrefs(SoundType.Vibrate, _isVibrateOn);
             }
         }
 
