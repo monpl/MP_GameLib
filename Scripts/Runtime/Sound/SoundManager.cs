@@ -78,12 +78,19 @@ namespace MPGameLib.Sound
         /// <param name="sfxRoot">효과음 폴더 Root</param>
         /// <param name="bgmRoot">BGM폴더 Root</param>
         /// <param name="defaultBgmName">기본 BGM 파일 이름</param>
-        public void PreInit(bool defaultUserBgmOn, bool defaultUserSfxOn, bool defaultUserVibrateOn, string sfxRoot, string bgmRoot, string defaultBgmName)
+        /// <param name="bgmSoundValue">bgm 사운드 크기</param>
+        /// <param name="sfxSoundValue">sfx 사운드 크기</param>
+        public void PreInit(
+            bool defaultUserBgmOn = true, bool defaultUserSfxOn = true, bool defaultUserVibrateOn = true, 
+            string sfxRoot = "Sounds/SFX", string bgmRoot = "Sounds/BGM", 
+            string defaultBgmName = "Main",
+            float bgmSoundValue = 1f, float sfxSoundValue = 1f
+            )
         {
             if (_isPreInit)
                 return;
 
-            CreateSoundSources();
+            CreateSoundSources(bgmSoundValue, sfxSoundValue);
 
             _delaySfxQueue = new Queue<AudioClip>();
             _effectDic = new Dictionary<string, AudioClip>();
@@ -98,13 +105,16 @@ namespace MPGameLib.Sound
             IsVibrateOn = GetPrefsSoundInfo(SoundType.Vibrate, defaultUserVibrateOn);
         }
 
-        private void CreateSoundSources()
+        private void CreateSoundSources(float bgmValue, float sfxValue)
         {
             _bgmSource = new GameObject("BgmSource").AddComponent<AudioSource>();
             _sfxSource = new GameObject("SfxSource").AddComponent<AudioSource>();
             
             _bgmSource.transform.SetParent(transform);
             _sfxSource.transform.SetParent(transform);
+
+            _bgmSource.volume = bgmValue;
+            _sfxSource.volume = sfxValue;
         }
 
         private void SettingSfx(string sfxRoot)
