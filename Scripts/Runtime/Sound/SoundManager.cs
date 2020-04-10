@@ -31,6 +31,7 @@ namespace MPGameLib.Sound
         private Dictionary<string, AudioClip> _effectDic;
         private Dictionary<string, AudioClip> _bgmDic;
         private Queue<AudioClip> _delaySfxQueue;
+        private float _bgmVolume;
         
         private const string PlayerPrefs_PREFIX = "MPGameLib_SKILLZ_SOUNDMGR_";
         private bool _isPreInit;
@@ -115,6 +116,8 @@ namespace MPGameLib.Sound
 
             _bgmSource.volume = bgmValue;
             _sfxSource.volume = sfxValue;
+
+            _bgmVolume = bgmValue;
         }
 
         private void SettingSfx(string sfxRoot)
@@ -152,6 +155,8 @@ namespace MPGameLib.Sound
                 Debug.LogError("You need to call PreInit()..!");
                 return;
             }
+            
+            _bgmSource.DOKill();
 
             switch (action)
             {
@@ -172,6 +177,21 @@ namespace MPGameLib.Sound
                 default:
                     throw new ArgumentOutOfRangeException(nameof(action), action, null);
             }
+        }
+        
+        public void PauseWithFade(bool isPause, float fadeTime)
+        {
+            _bgmSource.DOKill();
+            _bgmSource.DOFade(isPause ? 0f : _bgmVolume, fadeTime).OnComplete(() =>
+            {
+                if (isPause)
+                    _bgmSource.Pause();
+                else
+                {
+                    if(IsBgmOn)
+                        _bgmSource.UnPause();
+                }
+            });
         }
 
         /// <summary>
