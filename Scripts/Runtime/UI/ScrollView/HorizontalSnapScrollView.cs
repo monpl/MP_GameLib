@@ -81,6 +81,9 @@ namespace MPGameLib.UI
                 return;
             }
 
+            _currIdx = index;
+            _nextIdx = index;
+            
             if (isLerping)
             {
                 StartLerpingContent(index);
@@ -89,9 +92,6 @@ namespace MPGameLib.UI
             {
                 contentRoot.anchoredPosition =
                     new Vector2(_contentMaxX * _wayPoints[index] * -1, contentRoot.anchoredPosition.y);
-
-                _currIdx = index;
-                _nextIdx = index;
 
                 UpdateDotsColor(_nextIdx);
             }
