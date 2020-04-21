@@ -68,11 +68,34 @@ namespace MPGameLib.UI
             BatchContents();
         }
 
-        public virtual void Init(int startIndex)
+        public virtual void Init(int startIndex, bool isLerping = false)
         {
-            SetPageForIndex(startIndex);
+            SetPageForIndex(startIndex, isLerping);
         }
         
+        public void SetPageForIndex(int index, bool isLerping = false)
+        {
+            if (index >= _dotImages.Length)
+            {
+                Debug.LogError($"page is Invalid..!, index: {index}");
+                return;
+            }
+
+            if (isLerping)
+            {
+                StartLerpingContent(index);
+            }
+            else
+            {
+                contentRoot.anchoredPosition =
+                    new Vector2(_contentMaxX * _wayPoints[index] * -1, contentRoot.anchoredPosition.y);
+
+                _currIdx = index;
+                _nextIdx = index;
+
+                UpdateDotsColor(_nextIdx);
+            }
+        }
         
         // ----------------
         // Event Methods
@@ -93,10 +116,7 @@ namespace MPGameLib.UI
         {
             _nextIdx = IsChangeContent() ? GetClampedNextIndex(_nextIdx) : _currIdx;
             
-            ScrollRect.velocity = Vector2.zero;
-            _snapListener?.OnListen(_nextIdx);
-            UpdateDotsColor(_nextIdx);
-            StartLerping(_nextIdx);
+            StartLerpingContent(_nextIdx);
         }
 
         // ----------------
@@ -110,6 +130,16 @@ namespace MPGameLib.UI
             {
                 _wayPoints[i] = (float) i / Mathf.Max(1, (contentCnt - 1));
             }
+        }
+
+        private void StartLerpingContent(int index)
+        {
+            StopLerping();
+            
+            ScrollRect.velocity = Vector2.zero;
+            _snapListener?.OnListen(index);
+            UpdateDotsColor(index);
+            StartLerping(index);
         }
         
         private void CreateDots(int createCount)
@@ -141,22 +171,6 @@ namespace MPGameLib.UI
             {
                 contentRoot.GetChild(i).GetComponent<RectTransform>().SetAnchoredPositionX(i * _contentSpace);
             }
-        }
-
-        private void SetPageForIndex(int index)
-        {
-            if (index >= _dotImages.Length)
-            {
-                Debug.LogError($"page is Invalid..!, index: {index}");
-                return;
-            }
-            
-            contentRoot.anchoredPosition = new Vector2(_contentMaxX * _wayPoints[index] * -1, contentRoot.anchoredPosition.y);
-            
-            _currIdx = index;
-            _nextIdx = index;
-
-            UpdateDotsColor(_nextIdx);
         }
 
         private void UpdateDotsColor(int highlightDotIndex)
