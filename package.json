@@ -1,7 +1,7 @@
 {
   "name": "com.monsterplanet.gamelib",
   "displayName": "MP_GameLib",
-  "version": "1.2.13",
+  "version": "1.4.1",
   "unity": "2019.2",
   "keywords": [
     "MonsterPlanet",
@@ -13,7 +13,7 @@
     "url": "git+https://github.com/monpl/MP_GameLib.git"
   },
   "dependencies": {
-    "com.monsterplanet.patterns": "https://github.com/monpl/MP_Patterns.git#v1.0.1",
+    "com.monsterplanet.patterns": "https://github.com/monpl/MP_Patterns.git#v1.1.0",
     "com.demigiant.dotween": "https://github.com/monpl/dotween.git#v1.2.321-upm"
   },
   "samples": [
