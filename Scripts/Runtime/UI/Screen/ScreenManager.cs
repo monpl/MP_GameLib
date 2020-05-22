@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using MP_Patterns;
@@ -14,6 +15,7 @@ namespace MPGameLib.UI
     public class ScreenManager : Singleton<ScreenManager>
     {
         private Dictionary<string, ScreenBase> _screenDictionary;
+        private Queue<Tuple<string,float,float>> _screenQueue;
         private ScreenManagerSettings _settings;
         
         public string CurScreenType { get; private set; }
@@ -22,12 +24,15 @@ namespace MPGameLib.UI
         public void PreInit(Transform screenRoot, ScreenManagerSettings settings)
         {
             _screenDictionary = new Dictionary<string, ScreenBase>();
+            _screenQueue = new Queue<Tuple<string, float, float>>();
             _settings = settings;
             
             FindAndAddScreens(screenRoot);
 
             CurScreenType = string.Empty;
             IsTransitioning = false;
+
+            StartCoroutine(ScreenProcessRoutine());
         }
         
         private void FindAndAddScreens(Component screenRoot)
@@ -47,16 +52,32 @@ namespace MPGameLib.UI
 
         public void ChangeScreen(string newScreenType, float changeTime = -1f, float delay = 0.0f)
         {
-            if (IsTransitioning)
-                return;
+            _screenQueue.Enqueue(new Tuple<string, float, float>(newScreenType, changeTime, delay));
+        }
 
-            if (string.IsNullOrEmpty(newScreenType) || !_screenDictionary.ContainsKey(newScreenType))
-                return;
+        private IEnumerator ScreenProcessRoutine()
+        {
+            while(true)
+            { 
+                yield return null;
+                if (_screenQueue.Count == 0)
+                    continue;
+                
+                var screenData = _screenQueue.Dequeue();
+                var newScreenType = screenData.Item1;
+                var changeTime = screenData.Item2;
+                var delay = screenData.Item3;
 
-            if (newScreenType == CurScreenType || string.IsNullOrEmpty(CurScreenType))
-                StartCoroutine(ShowFirstScreenRoutine(newScreenType));
-            else
-                StartCoroutine(ChangeScreenRoutine(newScreenType, changeTime < 0f ? _settings.defaultChangeTime : changeTime, delay));
+                if (string.IsNullOrEmpty(newScreenType) || !_screenDictionary.ContainsKey(newScreenType))
+                    continue;
+
+                if (newScreenType == CurScreenType || string.IsNullOrEmpty(CurScreenType))
+                    yield return ShowFirstScreenRoutine(newScreenType);
+                else
+                    yield return ChangeScreenRoutine(newScreenType, changeTime < 0f ? _settings.defaultChangeTime : changeTime, delay);
+                
+                yield return null;
+            }
         }
         
         private IEnumerator ShowFirstScreenRoutine(string firstScreenType)
