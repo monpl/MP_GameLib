@@ -159,6 +159,7 @@ namespace MPGameLib.Sound
             }
             
             _bgmSource.DOKill();
+            _bgmSource.volume = _bgmVolume;
 
             switch (action)
             {
