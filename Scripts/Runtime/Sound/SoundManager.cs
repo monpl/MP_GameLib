@@ -32,6 +32,7 @@ namespace MPGameLib.Sound
         private Dictionary<string, AudioClip> _bgmDic;
         private Queue<AudioClip> _delaySfxQueue;
         private float _bgmVolume;
+        private float _sfxVolume;
         
         private const string PlayerPrefs_PREFIX = "MPGameLib_SKILLZ_SOUNDMGR_";
         private bool _isPreInit;
@@ -79,19 +80,19 @@ namespace MPGameLib.Sound
         /// <param name="sfxRoot">효과음 폴더 Root</param>
         /// <param name="bgmRoot">BGM폴더 Root</param>
         /// <param name="defaultBgmName">기본 BGM 파일 이름</param>
-        /// <param name="bgmSoundValue">bgm 사운드 크기</param>
-        /// <param name="sfxSoundValue">sfx 사운드 크기</param>
+        /// <param name="defaultBgmVolume">bgm 사운드 크기</param>
+        /// <param name="defaultSfxVolume">sfx 사운드 크기</param>
         public void PreInit(
             bool defaultUserBgmOn = true, bool defaultUserSfxOn = true, bool defaultUserVibrateOn = true, 
             string sfxRoot = "Sounds/SFX", string bgmRoot = "Sounds/BGM", 
             string defaultBgmName = "Main",
-            float bgmSoundValue = 1f, float sfxSoundValue = 1f
+            float defaultBgmVolume = 1f, float defaultSfxVolume = 1f
             )
         {
             if (_isPreInit)
                 return;
 
-            CreateSoundSources(bgmSoundValue, sfxSoundValue);
+            CreateSoundSources(defaultBgmVolume, defaultSfxVolume);
 
             _delaySfxQueue = new Queue<AudioClip>();
             _effectDic = new Dictionary<string, AudioClip>();
@@ -106,18 +107,19 @@ namespace MPGameLib.Sound
             IsVibrateOn = GetPrefsSoundInfo(SoundType.Vibrate, defaultUserVibrateOn);
         }
 
-        private void CreateSoundSources(float bgmValue, float sfxValue)
+        private void CreateSoundSources(float defaultBgmValue, float defaultSfxValue)
         {
             _bgmSource = new GameObject("BgmSource").AddComponent<AudioSource>();
             _sfxSource = new GameObject("SfxSource").AddComponent<AudioSource>();
             
             _bgmSource.transform.SetParent(transform);
             _sfxSource.transform.SetParent(transform);
+            
+            _bgmVolume = GetPrefsVolume(SoundType.Bgm, defaultBgmValue);
+            _sfxVolume = GetPrefsVolume(SoundType.Sfx, defaultSfxValue);
 
-            _bgmSource.volume = bgmValue;
-            _sfxSource.volume = sfxValue;
-
-            _bgmVolume = bgmValue;
+            _bgmSource.volume = _bgmVolume;
+            _sfxSource.volume = _sfxVolume;
         }
 
         private void SettingSfx(string sfxRoot)
@@ -214,6 +216,23 @@ namespace MPGameLib.Sound
 
             _bgmSource.clip = _bgmDic[newBgmName];
             _bgmSource.Play();
+        }
+
+        
+        public void SetBgmVolume(float newVolume)
+        {
+            _bgmSource.volume = newVolume;
+            _bgmVolume = newVolume;
+
+            SaveVolume(SoundType.Bgm, newVolume);
+        }
+        
+        public void SetSfxVolume(float newVolume)
+        {
+            _sfxSource.volume = newVolume;
+            _sfxVolume = newVolume;
+            
+            SaveVolume(SoundType.Sfx, newVolume);
         }
 
         /// <summary>
@@ -333,9 +352,19 @@ namespace MPGameLib.Sound
             return PlayerPrefs.GetInt(PlayerPrefs_PREFIX + soundType, defaultOn ? 1 : 0) == 1;
         }
 
+        private float GetPrefsVolume(SoundType soundType, float defaultVal)
+        {
+            return PlayerPrefs.GetFloat(PlayerPrefs_PREFIX + soundType + "_Volume", defaultVal);
+        }
+
         private void SaveToPrefs(SoundType soundType, bool isOn)
         {
             PlayerPrefs.SetInt(PlayerPrefs_PREFIX + soundType, isOn ? 1 : 0);
+        }
+
+        private void SaveVolume(SoundType soundType, float val)
+        {
+            PlayerPrefs.SetFloat(PlayerPrefs_PREFIX + soundType + "_Volume", val);
         }
 
         private void OnApplicationPause(bool pauseStatus)
