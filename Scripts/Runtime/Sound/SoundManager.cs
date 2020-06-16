@@ -20,6 +20,13 @@ namespace MPGameLib.Sound
         Stop,
     }
 
+    public class DelaySoundInfo
+    {
+        public AudioClip clip;
+        public float removeUnityTime;
+        public bool playedSound = false;
+    }
+
     /// <summary>
     /// 배경, 효과음을 담당하는 사운드 관리자
     /// </summary>
@@ -30,7 +37,9 @@ namespace MPGameLib.Sound
 
         private Dictionary<string, AudioClip> _effectDic;
         private Dictionary<string, AudioClip> _bgmDic;
-        private Queue<AudioClip> _delaySfxQueue;
+        private List<DelaySoundInfo> _delaySfxList;
+        private Dictionary<float, AudioClip> _audioClipDic;
+        
         private float _bgmVolume;
         private float _sfxVolume;
         
@@ -94,7 +103,7 @@ namespace MPGameLib.Sound
 
             CreateSoundSources(defaultBgmVolume, defaultSfxVolume);
 
-            _delaySfxQueue = new Queue<AudioClip>();
+            _delaySfxList = new List<DelaySoundInfo>();
             _effectDic = new Dictionary<string, AudioClip>();
             _bgmDic = new Dictionary<string, AudioClip>();
 
@@ -143,6 +152,25 @@ namespace MPGameLib.Sound
                 _bgmSource.clip = _bgmDic[defaultBgmName];
             else
                 _bgmSource.clip = _bgmDic[bgmList[0].name];
+        }
+
+        private void Update()
+        {
+            if (!_isPreInit || _delaySfxList.Count == 0)
+                return;
+            
+            foreach (var delayInfo in _delaySfxList)
+            {
+                if (delayInfo.removeUnityTime > Time.time) 
+                    continue;
+                
+                if (IsSfxOn)
+                    _sfxSource.PlayOneShot(delayInfo.clip);
+
+                delayInfo.playedSound = true;
+            }
+            
+            _delaySfxList.RemoveAll(obj => obj.playedSound);
         }
 
         /// <summary>
@@ -285,9 +313,18 @@ namespace MPGameLib.Sound
             }
             else
             {
-                _delaySfxQueue.Enqueue(sfxClip);
-                Invoke(nameof(DelayPlayEffect), delay);
+                AddDelaySoundList(sfxClip, delay);
             }
+        }
+
+        private void AddDelaySoundList(AudioClip clip, float delay)
+        {
+            _delaySfxList.Add(new DelaySoundInfo
+            {
+                clip = clip,
+                removeUnityTime = Time.time + delay,
+                playedSound = false
+            });
         }
 
         /// <summary>
@@ -324,22 +361,7 @@ namespace MPGameLib.Sound
             _sfxSource.loop = false;
             _sfxSource.Stop();
         }
-
-        private void DelayPlayEffect()
-        {
-            if (!_isPreInit)
-            {
-                Debug.LogError("You need to call PreInit()..!");
-                return;
-            }
-
-            if (!IsSfxOn || _delaySfxQueue.Count == 0)
-                return;
-
-            var sfxClip = _delaySfxQueue.Dequeue();
-            _sfxSource.PlayOneShot(sfxClip);
-        }
-
+        
         public void PlayVibrate()
         {
             if (IsVibrateOn == false)
