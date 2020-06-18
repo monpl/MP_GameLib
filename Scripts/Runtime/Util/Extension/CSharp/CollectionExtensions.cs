@@ -21,6 +21,16 @@ namespace MPGameLib.Extensions
             return list[Random.Range(0, list.Count)];
         }
 
+        public static T GetRandomAndRemove<T>(this List<T> list)
+        {
+            var randomIndex = Random.Range(0, list.Count);
+            var ret = list[randomIndex];
+            
+            list.RemoveAt(randomIndex);
+
+            return ret;
+        }
+
         public static void RemoveLast<T>(this List<T> list)
         {
             list.RemoveAt(list.Count - 1);
@@ -48,6 +58,13 @@ namespace MPGameLib.Extensions
                 list[k] = list[n];
                 list[n] = value;
             }
+        }
+        
+        public static void Swap<T>(IList<T> list, int indexA, int indexB)
+        {
+            T tmp = list[indexA];
+            list[indexA] = list[indexB];
+            list[indexB] = tmp;
         }
         
         #endregion
