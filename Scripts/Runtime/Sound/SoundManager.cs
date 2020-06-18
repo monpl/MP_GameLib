@@ -225,6 +225,21 @@ namespace MPGameLib.Sound
             });
         }
 
+        public void StopWithFade(bool isStop, float fadeTime)
+        {
+            _bgmSource.DOKill();
+            _bgmSource.DOFade(isStop ? 0f : _bgmVolume, fadeTime).OnComplete(() =>
+            {
+                if (isStop)
+                    _bgmSource.Stop();
+                else
+                {
+                    if (IsBgmOn)
+                        _bgmSource.Play();
+                }
+            });
+        }
+
         /// <summary>
         /// BGM을 바꾼다.
         /// </summary>
