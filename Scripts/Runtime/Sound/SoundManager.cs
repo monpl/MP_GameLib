@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using MP_Patterns;
 using DG.Tweening;
@@ -25,6 +26,7 @@ namespace MPGameLib.Sound
         public AudioClip clip;
         public float removeUnityTime;
         public bool playedSound = false;
+        public bool isForce;
     }
 
     /// <summary>
@@ -34,6 +36,7 @@ namespace MPGameLib.Sound
     {
         private AudioSource _bgmSource;
         private AudioSource _sfxSource;
+        private AudioSource _forceSfxSource;
 
         private Dictionary<string, AudioClip> _effectDic;
         private Dictionary<string, AudioClip> _bgmDic;
@@ -42,7 +45,7 @@ namespace MPGameLib.Sound
         
         private float _bgmVolume;
         private float _sfxVolume;
-        
+
         private const string PlayerPrefs_PREFIX = "MPGameLib_SKILLZ_SOUNDMGR_";
         private bool _isPreInit;
 
@@ -92,11 +95,10 @@ namespace MPGameLib.Sound
         /// <param name="defaultBgmVolume">bgm 사운드 크기</param>
         /// <param name="defaultSfxVolume">sfx 사운드 크기</param>
         public void PreInit(
-            bool defaultUserBgmOn = true, bool defaultUserSfxOn = true, bool defaultUserVibrateOn = true, 
-            string sfxRoot = "Sounds/SFX", string bgmRoot = "Sounds/BGM", 
+            bool defaultUserBgmOn = true, bool defaultUserSfxOn = true, bool defaultUserVibrateOn = true,
+            string sfxRoot = "Sounds/SFX", string bgmRoot = "Sounds/BGM",
             string defaultBgmName = "Main",
-            float defaultBgmVolume = 1f, float defaultSfxVolume = 1f
-            )
+            float defaultBgmVolume = 1f, float defaultSfxVolume = 1f)
         {
             if (_isPreInit)
                 return;
@@ -120,15 +122,18 @@ namespace MPGameLib.Sound
         {
             _bgmSource = new GameObject("BgmSource").AddComponent<AudioSource>();
             _sfxSource = new GameObject("SfxSource").AddComponent<AudioSource>();
+            _forceSfxSource = new GameObject("SfxForceSource").AddComponent<AudioSource>();
             
             _bgmSource.transform.SetParent(transform);
             _sfxSource.transform.SetParent(transform);
+            _forceSfxSource.transform.SetParent(transform);
             
             _bgmVolume = GetPrefsVolume(SoundType.Bgm, defaultBgmValue);
             _sfxVolume = GetPrefsVolume(SoundType.Sfx, defaultSfxValue);
 
             _bgmSource.volume = _bgmVolume;
             _sfxSource.volume = _sfxVolume;
+            _forceSfxSource.volume = Mathf.Clamp(_sfxVolume, 0.4f, 1f);
         }
 
         private void SettingSfx(string sfxRoot)
@@ -166,6 +171,8 @@ namespace MPGameLib.Sound
                 
                 if (IsSfxOn)
                     _sfxSource.PlayOneShot(delayInfo.clip);
+                else if (delayInfo.isForce)
+                    _forceSfxSource.PlayOneShot(delayInfo.clip);
 
                 delayInfo.playedSound = true;
             }
@@ -324,21 +331,25 @@ namespace MPGameLib.Sound
             var sfxClip = _effectDic[sfxName];
             if (delay <= 0f)
             {
-                _sfxSource.PlayOneShot(sfxClip);
+                if(isForce)
+                    _forceSfxSource.PlayOneShot(sfxClip);
+                else
+                    _sfxSource.PlayOneShot(sfxClip);
             }
             else
             {
-                AddDelaySoundList(sfxClip, delay);
+                AddDelaySoundList(sfxClip, delay, isForce);
             }
         }
 
-        private void AddDelaySoundList(AudioClip clip, float delay)
+        private void AddDelaySoundList(AudioClip clip, float delay, bool isForce)
         {
             _delaySfxList.Add(new DelaySoundInfo
             {
                 clip = clip,
                 removeUnityTime = Time.time + delay,
-                playedSound = false
+                playedSound = false,
+                isForce = isForce
             });
         }
 
