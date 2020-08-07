@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Linq;
 using UnityEngine;
 
 namespace MPGameLib.UI
@@ -21,6 +22,13 @@ namespace MPGameLib.UI
 
             _animator.enabled = true;
             Clear();
+        }
+
+        public override float GetTotalTime()
+        {
+            return base.GetTotalTime()
+                   + _animator.runtimeAnimatorController.animationClips
+                       .First(obj => obj.name == "Show").length;
         }
 
         protected override IEnumerator ShowingTextInfo()

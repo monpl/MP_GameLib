@@ -26,7 +26,8 @@ namespace MPGameLib.UI
         public float duration;
         
         private Coroutine _showRoutine;
-        
+        private float _delay;
+
         public virtual void PreInit()
         {
             
@@ -37,11 +38,19 @@ namespace MPGameLib.UI
             
         }
 
-        public void ShowInfoText(InfoTextShowData data, string infoTextType, InfoTextPool pool)
+        public float ShowInfoText(InfoTextShowData data, string infoTextType, InfoTextPool pool)
         {
             PrepareShow(data);
 
             _showRoutine = this.RestartCoroutine(ShowInfoTextRoutine(data, infoTextType, pool), _showRoutine);
+            _delay = data.delay;
+            
+            return GetTotalTime();
+        }
+
+        public virtual float GetTotalTime()
+        {
+            return _delay + duration;
         }
 
         protected virtual void PrepareShow(InfoTextShowData data)

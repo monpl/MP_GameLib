@@ -45,10 +45,10 @@ namespace MPGameLib.UI
             }
         }
 
-        public void ShowInfoText(string infoTextType, InfoTextShowData data, bool pushAllOthers = false)
+        public float ShowInfoText(string infoTextType, InfoTextShowData data, bool pushAllOthers = false)
         {
             if (IsContainInDic(infoTextType) == false)
-                return;
+                return 0f;
             
             if(pushAllOthers)
                 PushAll();
@@ -56,11 +56,11 @@ namespace MPGameLib.UI
             if (IsIgnoreFuncAtShow?.Invoke() == true)
             {
                 Debug.Log("Ignore show!!");
-                return;
+                return 0f;
             }
 
             var newInfoText = _infoTextPoolDic[infoTextType].Pop();
-            newInfoText.ShowInfoText(data, infoTextType, this);
+            return newInfoText.ShowInfoText(data, infoTextType, this);
         }
         
         public void PushText(InfoText infoText, string infoTextType)
