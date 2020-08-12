@@ -10,7 +10,12 @@ namespace MPGameLib.Util
         /// <returns></returns>
         public static float GetScaleMatch()
         {
-            return (float) Screen.width / (float) Screen.height >= 0.55f ? 1f : 0f;
+            var isPortrait = Screen.height > Screen.width;
+            
+            if(isPortrait)
+                return (float) Screen.width / (float) Screen.height >= 0.55f ? 1f : 0f;
+            
+            return (float) Screen.height / (float) Screen.width >= 0.55f ? 1f : 0f;
         }
         
         /// <summary>
