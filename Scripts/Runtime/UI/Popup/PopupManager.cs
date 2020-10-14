@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using MP_Patterns;
@@ -12,6 +13,8 @@ namespace MPGameLib.UI
     {
         public bool isOnlyOnePopup;
         public float dimmingTime = 0.1f;
+        public bool isPortrait;
+        public Action<List<string>> onChangedPopupList;
     }
 
     public class PopupActionData
@@ -39,6 +42,7 @@ namespace MPGameLib.UI
 
         // Action을 받으면 코루틴을 돌려 큐로 돌리기로!
         private Queue<PopupActionData> _popupActions;
+        private Action<List<string>> _popupChangedAction;
 
         public void PreInit(RectTransform[] popupRoots, PopupManagerSettings settings)
         {
@@ -49,6 +53,7 @@ namespace MPGameLib.UI
             showingPopupList = new List<string>();
             waitingPopupQueue = new Queue<PopupActionData>();
             _popupActions = new Queue<PopupActionData>();
+            _popupChangedAction = settings.onChangedPopupList;
 
             FindChildPopups();
 
@@ -80,6 +85,13 @@ namespace MPGameLib.UI
         {
             waitingPopupQueue.Enqueue(new PopupActionData
                 {actionType = PopupAction.Show, delay = delay, popupName = waitPopupName});
+        }
+
+        public T AddWaitingPopupQueue<T>(float delay = 0f) where T : PopupBase
+        {
+            var popupName = typeof(T).Name;
+            AddWaitingPopupQueue(popupName, delay);
+            return (T) PopupDic[popupName];
         }
 
         private void PopWaitingQueue()
@@ -153,7 +165,7 @@ namespace MPGameLib.UI
                         }
 
                         yield return ShowPopupRoutine(popupName);
-                        showingPopupList.Add(popupName);
+                        AddPopupListInList(popupName);
                         break;
                     case PopupAction.Hide:
                         if (showingPopupList.Contains(popupName) == false)
@@ -162,14 +174,14 @@ namespace MPGameLib.UI
                             break;
                         }
 
-                        showingPopupList.Remove(popupName);
+                        RemovePopupInList(popupName);
                         yield return HidePopupRoutine(popupName);
                         break;
                     case PopupAction.PopHide:
                         if (showingPopupList.Count == 0)
                             break;
 
-                        var lastPopupName = showingPopupList.GetLastAndRemove();
+                        var lastPopupName = RemoveLastPopupInList();
                         yield return HidePopupRoutine(lastPopupName);
                         break;
                     default:
@@ -205,7 +217,7 @@ namespace MPGameLib.UI
             // TODO: Show Only one Popup 처리
             if (_settings.isOnlyOnePopup && showingPopupList.Count >= 1)
             {
-                if (PopupDic[hidingPopupName].IsShown)
+                if (PopupDic[hidingPopupName].IsShown && _popupActions.Count == 0)
                 {
                     var prevPopupName = showingPopupList.GetLast();
                     StartCoroutine(PopupDic[prevPopupName].ShowPopup(true));
@@ -215,6 +227,26 @@ namespace MPGameLib.UI
             hidingPopup.HideWill();
 
             yield return hidingPopup.HidePopup();
+        }
+
+        private void AddPopupListInList(string popupName)
+        {
+            showingPopupList.Add(popupName);
+            _popupChangedAction?.Invoke(showingPopupList);
+        }
+
+        private void RemovePopupInList(string popupName)
+        {
+            showingPopupList.Remove(popupName);
+            _popupChangedAction?.Invoke(showingPopupList);
+        }
+
+        private string RemoveLastPopupInList()
+        {
+            var ret = showingPopupList.GetLastAndRemove();
+            _popupChangedAction?.Invoke(showingPopupList);
+            
+            return ret;
         }
     }
 }
