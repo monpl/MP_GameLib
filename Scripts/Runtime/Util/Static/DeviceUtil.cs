@@ -4,20 +4,20 @@ namespace MPGameLib.Util
 {
     public static class DeviceUtil
     {
+        public static bool isLandScapeGame;
+
         /// <summary>
         /// Get Unity canvas Width / Height Match 
         /// </summary>
         /// <returns></returns>
         public static float GetScaleMatch()
         {
-            var isPortrait = Screen.height > Screen.width;
-            
-            if(isPortrait)
+            if (isLandScapeGame == false)
                 return (float) Screen.width / (float) Screen.height >= 0.55f ? 1f : 0f;
-            
-            return (float) Screen.height / (float) Screen.width >= 0.55f ? 1f : 0f;
+
+            return (float) Screen.height / (float) Screen.width >= 0.55f ? 0f : 1f;
         }
-        
+
         /// <summary>
         /// Check the IphoneX
         /// </summary>
