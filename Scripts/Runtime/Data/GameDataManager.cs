@@ -46,7 +46,8 @@ namespace MPGameLib.Data
             if (_isInitialized)
                 return;
             
-            DataDictionary.Add(default1.GetType(), InitData(default1));
+            if(!DataDictionary.ContainsKey(default1.GetType()))
+                DataDictionary.Add(default1.GetType(), InitData(default1));
 
             _saveCloudAction = saveCloudAction;
             _isInitialized = true;
@@ -54,8 +55,14 @@ namespace MPGameLib.Data
 
         public static void PreInit<T1, T2>(T1 default1, T2 default2, Action<string, string> saveCloudAction = null) where T1 : IDataBase where T2 : IDataBase
         {
-            DataDictionary.Add(default1.GetType(), InitData(default1));
-            DataDictionary.Add(default2.GetType(), InitData(default2));
+            if (_isInitialized)
+                return;
+            
+            if (!DataDictionary.ContainsKey(default1.GetType()))
+                DataDictionary.Add(default1.GetType(), InitData(default1));
+            
+            if(!DataDictionary.ContainsKey(default2.GetType()))
+                DataDictionary.Add(default2.GetType(), InitData(default2));
 
             _saveCloudAction = saveCloudAction;
             _isInitialized = true;
@@ -63,9 +70,17 @@ namespace MPGameLib.Data
         
         public static void PreInit<T1, T2, T3>(T1 default1, T2 default2, T3 default3, Action<string, string> saveCloudAction = null) where T1 : IDataBase where T2 : IDataBase where T3 : IDataBase
         {
-            DataDictionary.Add(default1.GetType(), InitData(default1));
-            DataDictionary.Add(default2.GetType(), InitData(default2));
-            DataDictionary.Add(default3.GetType(), InitData(default3));
+            if (_isInitialized)
+                return;
+                        
+            if (!DataDictionary.ContainsKey(default1.GetType()))
+                DataDictionary.Add(default1.GetType(), InitData(default1));
+            
+            if (!DataDictionary.ContainsKey(default2.GetType()))
+                DataDictionary.Add(default2.GetType(), InitData(default2));
+            
+            if (!DataDictionary.ContainsKey(default3.GetType()))
+                DataDictionary.Add(default3.GetType(), InitData(default3));
 
             _saveCloudAction = saveCloudAction;
             _isInitialized = true;
