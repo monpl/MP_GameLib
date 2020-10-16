@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using MP_Patterns;
 using DG.Tweening;
@@ -100,10 +99,8 @@ namespace MPGameLib.Sound
             string defaultBgmName = "Main",
             float defaultBgmVolume = 1f, float defaultSfxVolume = 1f)
         {
-            if (_isPreInit)
-                return;
-
-            CreateSoundSources(defaultBgmVolume, defaultSfxVolume);
+            if(!_isPreInit)
+                CreateSoundSources(defaultBgmVolume, defaultSfxVolume);
 
             _delaySfxList = new List<DelaySoundInfo>();
             _effectDic = new Dictionary<string, AudioClip>();
