@@ -331,6 +331,7 @@ namespace MPGameLib.Sound
             var sfxClip = _effectDic[sfxName];
             if (delay <= 0f)
             {
+                // TODO: Bug, 같은 코드라인데 PlayEffect에 딜레이를 높은걸 먼저 걸고, 낮은걸 나중에 걸면 Queue에 쌓이기 때문에 순서가 바뀌어서 나오게 됨
                 if(isForce)
                     _forceSfxSource.PlayOneShot(sfxClip);
                 else
@@ -383,6 +384,11 @@ namespace MPGameLib.Sound
                 Debug.LogError("You need to call PreInit()..!");
                 return;
             }
+            
+            // TODO: Looping이 돌아가는 사운드들은 sfxSource에 말고 다른 Source에서 관리하도록 변경해보자
+            // 지금은 임시방편
+            if (!_sfxSource.loop)
+                return;
 
             _sfxSource.loop = false;
             _sfxSource.Stop();
