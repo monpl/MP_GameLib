@@ -28,7 +28,7 @@ namespace MPGameLib.UI
         {
             return base.GetTotalTime()
                    + _animator.runtimeAnimatorController.animationClips
-                       .First(obj => obj.name == "Show").length;
+                       .First(obj => obj.name.Contains("Show")).length;
         }
 
         protected override IEnumerator ShowingTextInfo()
