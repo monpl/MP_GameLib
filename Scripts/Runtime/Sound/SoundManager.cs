@@ -81,6 +81,7 @@ namespace MPGameLib.Sound
                 SaveToPrefs(SoundType.Vibrate, _isVibrateOn);
             }
         }
+        public bool IgnorePause { get; set; }
 
         /// <summary>
         /// 사운드 매니저 초기화
@@ -421,7 +422,7 @@ namespace MPGameLib.Sound
 
         private void OnApplicationPause(bool pauseStatus)
         {
-            if (!_isPreInit)
+            if (!_isPreInit || IgnorePause)
                 return;
 
             if (pauseStatus)
